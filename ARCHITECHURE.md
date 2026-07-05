@@ -778,24 +778,3 @@ Preview Edit  Export
 If a future feature naturally fits into the Document Model, the architecture remains clean, maintainable, and extensible.
 
 ---
-
-# Development Strategy
-
-Submitify 2.0 will **not** be developed inside the existing project.
-
-A new repository (`submitify-v2`) will be created.
-
-The existing project (`submitify`) will serve as a reference implementation.
-
-Reusable assets such as:
-
-- HTML templates
-- CSS
-- UI components
-- Prompt ideas
-- Cover page design
-- Index layout
-
-will be copied and adapted **only when needed**, while the backend architecture, API, database, AI pipeline, and rendering engine will be rebuilt from scratch in Go.
-
-This allows Submitify 2.0 to benefit from the experience gained in Version 1 without carrying forward architectural limitations.
