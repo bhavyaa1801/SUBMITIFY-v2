@@ -34,19 +34,27 @@ func main() {
 	generateService := service.NewGenerateService(
 		gen,
 		docBuilder,
+	)
+
+	exportService := service.NewExportService(
 		r,
 		exporter,
 	)
 
-	handler := handlers.New(generateService)
+	handler := handlers.New(
+		generateService,
+		exportService,
+	)
 
 	http.HandleFunc("/generate", handler.Generate)
+	http.HandleFunc("/export/pdf", handler.ExportPDF)
 
+	// Demo routes
 	http.HandleFunc("/demo", handlers.DemoDocument)
 	http.HandleFunc("/demo/html", handlers.DemoHTML)
 	http.HandleFunc("/demo/pdf", handlers.DemoPDF)
 
-	fmt.Println("Submitify V2 running on :8080")
+	fmt.Println(" Submitify V2 running on :8080")
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)

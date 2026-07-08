@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 
 	"github.com/bhavyaa1801/submitify-v2/internal/api"
 	"github.com/bhavyaa1801/submitify-v2/internal/service"
@@ -11,12 +10,17 @@ import (
 
 type Handler struct {
 	generateService *service.GenerateService
+	exportService   *service.ExportService
 }
 
-func New(generateService *service.GenerateService) *Handler {
-	
+func New(
+	generateService *service.GenerateService,
+	exportService *service.ExportService,
+) *Handler {
+
 	return &Handler{
 		generateService: generateService,
+		exportService:   exportService,
 	}
 }
 
@@ -27,6 +31,8 @@ func (h *Handler) Generate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	defer r.Body.Close()
+
 	var req api.GenerateRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -34,16 +40,16 @@ func (h *Handler) Generate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pdf, err := h.generateService.Generate(req)
+	document, err := h.generateService.Generate(req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/pdf")
-	w.Header().Set("Content-Disposition", `attachment; filename="submitify.pdf"`)
-    os.WriteFile("generated.pdf", pdf, 0644)
+	w.Header().Set("Content-Type", "application/json")
 
-    w.Write([]byte("PDF Generated Successfully"))
-	w.Write(pdf)
+	if err := json.NewEncoder(w).Encode(document); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
