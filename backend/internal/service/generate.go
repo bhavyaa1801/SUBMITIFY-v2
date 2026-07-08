@@ -5,19 +5,23 @@ import (
 	"github.com/bhavyaa1801/submitify-v2/internal/builder"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/generator"
 	"github.com/bhavyaa1801/submitify-v2/internal/models"
+	"github.com/bhavyaa1801/submitify-v2/internal/parser/question"
 )
 
 type GenerateService struct {
+	parser    *question.Parser
 	generator *generator.Generator
 	builder   *builder.Builder
 }
 
 func NewGenerateService(
+	parser *question.Parser,
 	generator *generator.Generator,
 	builder *builder.Builder,
 ) *GenerateService {
 
 	return &GenerateService{
+		parser:    parser,
 		generator: generator,
 		builder:   builder,
 	}
@@ -27,16 +31,20 @@ func (s *GenerateService) Generate(req api.GenerateRequest) (models.Document, er
 
 	profile := models.GetProfileDefinition(req.Profile)
 
-	var contents []builder.QuestionContent
+	questions, err := s.parser.Parse(req.RawQuestions)
+	if err != nil {
+		return models.Document{}, err
+	}
 
-	for i, question := range req.Questions {
+	contents := make([]builder.QuestionContent, 0, len(questions))
+
+	for _, q := range questions {
 
 		content, err := s.generator.Generate(
-			i+1,
-			question,
+			q.Number,
+			q.Text,
 			profile,
 		)
-
 		if err != nil {
 			return models.Document{}, err
 		}

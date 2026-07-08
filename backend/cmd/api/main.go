@@ -12,6 +12,7 @@ import (
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/groq"
 	"github.com/bhavyaa1801/submitify-v2/internal/renderer"
 	"github.com/bhavyaa1801/submitify-v2/internal/service"
+	"github.com/bhavyaa1801/submitify-v2/internal/parser/question"
 )
 
 func main() {
@@ -31,7 +32,10 @@ func main() {
 
 	exporter := pdf.New("wkhtmltopdf")
 
+	parser := question.New(gen)
+
 	generateService := service.NewGenerateService(
+		parser,
 		gen,
 		docBuilder,
 	)
