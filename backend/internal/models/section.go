@@ -14,5 +14,4 @@ type Section struct {
 	Title   string      `json:"title"`
 	Type    SectionType `json:"type"`
 	Content string      `json:"content"`
-	Order   int         `json:"order"`
 }

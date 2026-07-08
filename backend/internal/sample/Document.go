@@ -39,25 +39,25 @@ func NewProgrammingDocument() models.Document {
 						Title:   "Aim",
 						Type:    models.Paragraph,
 						Content: "To implement Bubble Sort.",
-						Order:   1,
+						
 					},
 					{
 						Title:   "Algorithm",
 						Type:    models.Paragraph,
 						Content: "1. Compare adjacent elements.\n2. Swap if required.",
-						Order:   2,
+						
 					},
 					{
 						Title:   "Source Code",
 						Type:    models.Code,
 						Content: "#include<iostream>\nint main(){return 0;}",
-						Order:   3,
+						
 					},
 					{
 						Title:   "Output",
 						Type:    models.Paragraph,
 						Content: "Sorted Array",
-						Order:   4,
+						
 					},
 				},
 			},
