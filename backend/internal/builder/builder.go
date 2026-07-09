@@ -35,6 +35,17 @@ func (b *Builder) Build(
 			Question: q.Question,
 		}
 
+		// Automatically create Aim from the original question
+		// for Programming profile.
+		if profile == models.Programming {
+			exp.Sections = append(exp.Sections, models.Section{
+				Title:   "Aim",
+				Type:    models.Paragraph,
+				Content: q.Question,
+			})
+		}
+
+		// AI-generated sections
 		for _, secDef := range def.Sections {
 
 			content := q.Sections[secDef.Title]

@@ -1,44 +1,44 @@
 package service
 
 import (
+	"fmt"
 	"github.com/bhavyaa1801/submitify-v2/internal/api"
 	"github.com/bhavyaa1801/submitify-v2/internal/builder"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/generator"
 	"github.com/bhavyaa1801/submitify-v2/internal/models"
-	"github.com/bhavyaa1801/submitify-v2/internal/parser/question"
 )
 
 type GenerateService struct {
-	parser    *question.Parser
 	generator *generator.Generator
 	builder   *builder.Builder
 }
 
 func NewGenerateService(
-	parser *question.Parser,
 	generator *generator.Generator,
 	builder *builder.Builder,
 ) *GenerateService {
 
 	return &GenerateService{
-		parser:    parser,
 		generator: generator,
 		builder:   builder,
 	}
 }
 
-func (s *GenerateService) Generate(req api.GenerateRequest) (models.Document, error) {
-
+func (s *GenerateService) Generate(
+	req api.GenerateRequest,
+) (models.Document, error) {
+    fmt.Println("REQUEST PROFILE:", req.Profile)
 	profile := models.GetProfileDefinition(req.Profile)
 
-	questions, err := s.parser.Parse(req.RawQuestions)
-	if err != nil {
-		return models.Document{}, err
+	fmt.Println("PROFILE:", profile.Name)
+
+	for _, s := range profile.Sections {
+		fmt.Println(s.Title)
 	}
 
-	contents := make([]builder.QuestionContent, 0, len(questions))
+	contents := make([]builder.QuestionContent, 0, len(req.Questions))
 
-	for _, q := range questions {
+	for _, q := range req.Questions {
 
 		content, err := s.generator.Generate(
 			q.Number,

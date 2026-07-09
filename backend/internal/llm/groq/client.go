@@ -29,15 +29,18 @@ func New(apiKey, model string) *Client {
 func (c *Client) Generate(prompt string) (string, error) {
 
 	request := ChatRequest{
-		Model: c.model,
-		Messages: []Message{
-			{
-				Role:    "user",
-				Content: prompt,
-			},
+	Model: c.model,
+	Messages: []Message{
+		{
+			Role:    "user",
+			Content: prompt,
 		},
-		Temperature: 0.2,
-	}
+	},
+	Temperature: 0,
+	ResponseFormat: &ResponseFormat{
+		Type: "json_object",
+	},
+}
 
 	body, err := json.Marshal(request)
 	if err != nil {

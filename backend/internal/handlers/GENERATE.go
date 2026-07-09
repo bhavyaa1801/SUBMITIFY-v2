@@ -9,18 +9,21 @@ import (
 )
 
 type Handler struct {
+	parseService    *service.ParseService
 	generateService *service.GenerateService
 	exportService   *service.ExportService
 }
 
 func New(
+	parseService *service.ParseService,
 	generateService *service.GenerateService,
 	exportService *service.ExportService,
 ) *Handler {
 
 	return &Handler{
+		parseService: parseService,
 		generateService: generateService,
-		exportService:   exportService,
+		exportService: exportService,
 	}
 }
 

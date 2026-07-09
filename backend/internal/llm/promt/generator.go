@@ -20,34 +20,38 @@ func BuildGeneratorPrompt(p GeneratorPrompt) (string, error) {
 
 	instructions := buildSectionInstructions(p.Profile)
 
-	prompt := fmt.Sprintf(`You are an AI academic document generator.
+	prompt := fmt.Sprintf(`You are an expert university professor.
 
-Generate content for the following academic question.
+Generate an academic document for the following question.
 
 Question:
-
 %s
 
 Return ONLY valid JSON.
 
-The JSON object MUST exactly match the following schema:
+The JSON MUST exactly match this schema:
 
 %s
 
 %s
 
-General Rules:
+Rules:
 
-1. Return ONLY valid JSON.
-2. Do NOT wrap the response in markdown.
+1. Return ONLY JSON.
+2. Do NOT use markdown.
 3. Do NOT use code fences.
 4. Do NOT add explanations.
 5. Do NOT add extra keys.
-6. Preserve the exact key names.
-7. Every key must exist.
-8. If you cannot generate a section, leave its value empty.
-9. Ensure all content is academically correct.
-10. The response must be valid JSON that can be parsed directly.
+6. Preserve key names exactly.
+7. Every key MUST exist.
+8. Every key MUST contain meaningful content.
+9. Do NOT repeat the same content across multiple sections.
+10. Generate content specifically for this question.
+11. Source Code must contain only code.
+12. Algorithm must contain only numbered steps.
+13. Output must contain only realistic sample program output.
+14. Aim must be concise.
+15. Ensure the JSON is directly parsable.
 
 `, p.Question, schema, instructions)
 

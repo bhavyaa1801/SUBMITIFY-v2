@@ -10,9 +10,10 @@ import (
 	"github.com/bhavyaa1801/submitify-v2/internal/handlers"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/generator"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/groq"
+	"github.com/bhavyaa1801/submitify-v2/internal/middleware"
+	"github.com/bhavyaa1801/submitify-v2/internal/parser/question"
 	"github.com/bhavyaa1801/submitify-v2/internal/renderer"
 	"github.com/bhavyaa1801/submitify-v2/internal/service"
-	"github.com/bhavyaa1801/submitify-v2/internal/parser/question"
 )
 
 func main() {
@@ -34,8 +35,11 @@ func main() {
 
 	parser := question.New(gen)
 
-	generateService := service.NewGenerateService(
+	parseService := service.NewParseService(
 		parser,
+	)
+
+	generateService := service.NewGenerateService(
 		gen,
 		docBuilder,
 	)
@@ -46,21 +50,28 @@ func main() {
 	)
 
 	handler := handlers.New(
+		parseService,
 		generateService,
 		exportService,
 	)
 
-	http.HandleFunc("/generate", handler.Generate)
-	http.HandleFunc("/export/pdf", handler.ExportPDF)
+	// Create router
+	mux := http.NewServeMux()
 
-	// Demo routes
-	http.HandleFunc("/demo", handlers.DemoDocument)
-	http.HandleFunc("/demo/html", handlers.DemoHTML)
-	http.HandleFunc("/demo/pdf", handlers.DemoPDF)
+	mux.HandleFunc("/parse", handler.Parse)
+	mux.HandleFunc("/generate", handler.Generate)
+	mux.HandleFunc("/export/pdf", handler.ExportPDF)
 
-	fmt.Println(" Submitify V2 running on :8080")
+	mux.HandleFunc("/demo", handlers.DemoDocument)
+	mux.HandleFunc("/demo/html", handlers.DemoHTML)
+	mux.HandleFunc("/demo/pdf", handlers.DemoPDF)
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	fmt.Println("Submitify V2 running on :8080")
+
+	if err := http.ListenAndServe(
+		":8080",
+		middleware.CORS(mux),
+	); err != nil {
 		panic(err)
 	}
 }

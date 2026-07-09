@@ -1,8 +1,12 @@
 package api
 
+import "github.com/bhavyaa1801/submitify-v2/internal/models"
+
 type GenerateResponse struct {
 	Success bool   `json:"success"`
 	Message string `json:"message,omitempty"`
 }
 
-// this is the res for api /generate wali  in llm it was for the llm 
+type ParseResponse struct {
+	Questions []models.Question `json:"questions"`
+}

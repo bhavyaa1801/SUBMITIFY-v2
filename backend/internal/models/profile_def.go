@@ -18,10 +18,6 @@ var ProgrammingProfile = ProfileDefinition{
 
 	Sections: []SectionDefinition{
 		{
-			Title: "Aim",
-			Type:  Paragraph,
-		},
-		{
 			Title: "Algorithm",
 			Type:  Paragraph,
 		},

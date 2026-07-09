@@ -35,6 +35,17 @@ func (g *Generator) Generate(
 	}
 
 	response, err := g.llm.Generate(p)
+	// fmt.Println("========== RAW AI RESPONSE ==========")
+	// fmt.Println(response)
+	// fmt.Println("=====================================")
+
+	// fmt.Println("PROFILE:", profile.Name)
+
+	// for _, s := range profile.Sections {
+	// 	fmt.Println("SECTION:", s.Title)
+	// }
+
+	
 	if err != nil {
 		return builder.QuestionContent{}, err
 	}
