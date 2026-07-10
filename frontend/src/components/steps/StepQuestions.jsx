@@ -33,7 +33,7 @@ export default function StepQuestions({
             </h2>
 
             <p className="step-sub">
-                Paste the complete practical sheet exactly as provided by your faculty.
+                Paste the questions as provided by your faculty - make sure to mark ques properly
             </p>
 
             <div

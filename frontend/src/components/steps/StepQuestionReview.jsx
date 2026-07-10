@@ -80,22 +80,67 @@ export default function StepQuestionReview({
 
           <div className="review-row">
             <span>Institution</span>
-            <span>{data.institution}</span>
+            <span>{data.institution || "—"}</span>
+          </div>
+
+          <div className="review-row">
+            <span>Department</span>
+            <span>{data.department || "—"}</span>
+          </div>
+
+          <div className="review-row">
+            <span>Academic Year</span>
+            <span>{data.academicYear || "—"}</span>
+          </div>
+
+          <div className="review-row">
+            <span>Semester</span>
+            <span>{data.semester || "—"}</span>
           </div>
 
           <div className="review-row">
             <span>Subject</span>
-            <span>{data.subject}</span>
+            <span>{data.subject || "—"}</span>
           </div>
 
           <div className="review-row">
-            <span>Profile</span>
-            <span>{data.profile}</span>
+            <span>Subject Code</span>
+            <span>{data.subjectCode || "—"}</span>
+          </div>
+
+          <div className="review-row">
+            <span>Course</span>
+            <span>{data.course || "—"}</span>
+          </div>
+
+          <div className="review-row">
+            <span>Student Name</span>
+            <span>{data.studentName || "—"}</span>
+          </div>
+
+          <div className="review-row">
+            <span>Enrollment No.</span>
+            <span>{data.enrollmentNo || "—"}</span>
+          </div>
+
+          <div className="review-row">
+            <span>Submitted To</span>
+            <span>{data.submittedTo || "—"}</span>
+          </div>
+
+          <div className="review-row">
+            <span>Designation</span>
+            <span>{data.designation || "—"}</span>
           </div>
 
           <div className="review-row">
             <span>Language</span>
-            <span>{data.language}</span>
+            <span>{data.language || "—"}</span>
+          </div>
+
+          <div className="review-row">
+            <span>Profile</span>
+            <span>{data.profile || "—"}</span>
           </div>
 
         </div>

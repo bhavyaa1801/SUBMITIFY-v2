@@ -38,7 +38,7 @@ export default function Footer() {
         </div>
 
         <p className="footer-tagline">
-          AI-powered academic document engine built for students.
+          AI-powered academic document engine built FOR THE STUDENT BY THE STUDENT .
           <br />
           Generate structured, editable academic documents in minutes.
           <br />

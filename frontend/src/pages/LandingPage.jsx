@@ -27,8 +27,8 @@ const HOW_STEPS = [
   },
   {
     num: "03",
-    title: "Review Parsed Questions",
-    desc: "Edit, delete or add questions before generation.",
+    title: "Review Your Input",
+    desc: "check details & Edit, delete or add questions before generation.",
   },
   {
     num: "04",
@@ -68,6 +68,8 @@ const FEATURE_CARDS = [
 export default function LandingPage() {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
+  const [showSample, setShowSample] = useState(false);
+  const SAMPLE_PDF_URL = "/sample.pdf";
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
@@ -142,17 +144,9 @@ export default function LandingPage() {
 
               <button
                 className="btn-ghost-lg"
-                onClick={() => {
-                  const section = document.getElementById("how");
-
-                  if (section) {
-                    section.scrollIntoView({
-                      behavior: "smooth",
-                    });
-                  }
-                }}
+                onClick={() => setShowSample(true)}
               >
-                Learn More
+                View Sample PDF
               </button>
             </div>
           </div>
@@ -171,7 +165,7 @@ export default function LandingPage() {
           )}
         </div>
       </section>
-            {/* HOW IT WORKS */}
+      {/* HOW IT WORKS */}
 
       <section className="lp-section" id="how">
         <div className="lp-section-label">// workflow</div>
@@ -241,62 +235,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* PIPELINE */}
-
-      <section className="lp-section">
-        <div className="lp-section-label">// pipeline</div>
-
-        <h2 className="lp-section-title">
-          Built around an intelligent workflow
-        </h2>
-
-        <p className="lp-section-sub">
-          Submitify separates parsing, generation and exporting into dedicated
-          services for reliable document creation.
-        </p>
-
-        <div
-          style={{
-            marginTop: 40,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              maxWidth: 900,
-              width: "100%",
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 18,
-              padding: "32px",
-              fontFamily: "monospace",
-              color: "#d4d4d4",
-              lineHeight: 2,
-              fontSize: "0.95rem",
-              overflowX: "auto",
-            }}
-          >
-{`Question Sheet
-      │
-      ▼
-Parse
-      │
-      ▼
-Review Questions
-      │
-      ▼
-Generate
-      │
-      ▼
-Document Editor
-      │
-      ▼
-Export PDF`}
-          </div>
-        </div>
-      </section>
-
+     
       {/* CTA */}
 
       <section className="lp-cta-banner">
@@ -319,6 +258,168 @@ Export PDF`}
           </button>
         </div>
       </section>
+
+      {/* SAMPLE PDF MODAL */}
+
+      {showSample && (
+        <div
+          onClick={() => setShowSample(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,.75)",
+            backdropFilter: "blur(6px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 99999,
+            padding: 20,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "min(1100px,100%)",
+              height: "min(90vh,900px)",
+              background: "#14161d",
+              border: "1px solid rgba(255,255,255,.08)",
+              borderRadius: 18,
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {/* Header */}
+
+            <div
+              style={{
+                padding: "18px 22px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid rgba(255,255,255,.08)",
+              }}
+            >
+              <div
+                style={{
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: "1.15rem",
+                }}
+              >
+                📄 Sample Academic Document
+              </div>
+
+              <button
+                className="btn-ghost"
+                onClick={() => setShowSample(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content */}
+
+            <div
+              style={{
+                flex: 1,
+                overflow: "hidden",
+              }}
+            >
+              {isMobile ? (
+                <div
+                  style={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 20,
+                    padding: 30,
+                  }}
+                >
+                  <span style={{ fontSize: "3rem" }}>📄</span>
+
+                  <h3
+                    style={{
+                      color: "#fff",
+                      margin: 0,
+                    }}
+                  >
+                    Sample Academic Document
+                  </h3>
+
+                  <p
+                    style={{
+                      color: "#8b93a7",
+                      maxWidth: 320,
+                      textAlign: "center",
+                    }}
+                  >
+                    PDF preview isn't supported on mobile.
+                    Open it using your device's PDF viewer.
+                  </p>
+
+                  <a
+                    href={SAMPLE_PDF_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary-lg"
+                    style={{
+                      textDecoration: "none",
+                    }}
+                  >
+                    Open Sample PDF
+                  </a>
+                </div>
+              ) : (
+                <iframe
+                  src={SAMPLE_PDF_URL}
+                  title="Sample PDF"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    border: "none",
+                  }}
+                />
+              )}
+            </div>
+
+            {/* Footer */}
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 12,
+                padding: 18,
+                borderTop: "1px solid rgba(255,255,255,.08)",
+              }}
+            >
+              <a
+                href={SAMPLE_PDF_URL}
+                download="Submitify-Sample.pdf"
+                className="btn-ghost-lg"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                Download Sample
+              </a>
+
+              <button
+                className="btn-primary-lg"
+                onClick={() => {
+                  setShowSample(false);
+                  navigate("/create");
+                }}
+              >
+                Create Document
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
