@@ -1,0 +1,121 @@
+.cover {
+
+    width: 100%;
+
+    padding-top: 10mm;
+
+    text-align: center;
+
+}
+
+.university {
+
+    margin: 0;
+
+    font-size: 2.2rem;
+
+    font-weight: bold;
+
+}
+
+.logo {
+
+    width: 200px;
+
+    height: 200px;
+
+    display: block;
+
+    margin: 12px auto;
+
+    object-fit: contain;
+
+}
+
+.logo-placeholder {
+
+    width: 200px;
+
+    height: 200px;
+
+    margin: 12px auto;
+
+    border: 1px dashed #999;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+.year {
+
+    margin-top: 8px;
+
+    font-size: 18px;
+
+}
+
+.department {
+
+    margin-top: 12px;
+
+    font-size: 22px;
+
+}
+
+.subject {
+
+    margin-top: 30px;
+
+    font-size: 30px;
+
+    font-weight: bold;
+
+}
+
+.subject-code {
+
+    margin-top: 10px;
+
+    font-size: 20px;
+
+}
+
+.submission-table {
+
+    width: 100%;
+
+    margin-top: 70px;
+
+    border-collapse: collapse;
+
+    table-layout: fixed;
+
+}
+
+.submission-table td {
+
+    width: 50%;
+
+    vertical-align: top;
+
+}
+
+.left {
+
+    text-align: left;
+
+    padding-right: 40px;
+
+}
+
+.right {
+
+    text-align: left;
+
+    padding-left: 90px;
+
+}

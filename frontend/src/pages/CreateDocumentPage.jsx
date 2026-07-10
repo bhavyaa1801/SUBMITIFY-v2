@@ -5,15 +5,24 @@ import StepQuestions from "../components/steps/StepQuestions";
 import StepQuestionReview from "../components/steps/StepQuestionReview";
 
 import GeneratingScreen from "../components/GeneratingScreen";
-import DocumentEditor from "../components/DocumentEditor";
+
+// import DocumentEditor from "../components/DocumentEditor";
+//yha pr import mai change hoga 
+
+import DocumentEditor from "../components/editor/DocumentEditor/DocumentEditor";
+import dummyDocument from "../data/dummyDocument";
 
 import FloatingCode from "../components/FloatingCode";
 
 import { exportPDF } from "../services/export";
 import {
-    parseQuestions,
-    generateDocument,
+  parseQuestions,
+  generateDocument,
 } from "../services/generate";
+
+
+const DEV_MODE = true;
+
 
 const STEPS = [
   "Project Info",
@@ -26,9 +35,8 @@ export default function CreateDocumentPage() {
   const [step, setStep] = useState(0);
 
   const [status, setStatus] = useState("form");
-  // form | generating | editing
 
-  const [document, setDocument] = useState(null);
+  const [document, setDocument] = useState(dummyDocument);
 
   const [formData, setFormData] = useState({
 
@@ -59,6 +67,19 @@ export default function CreateDocumentPage() {
     questions: [],
   });
 
+  // yha se ye delted hoga
+  if (DEV_MODE) {
+    return (
+      <DocumentEditor
+        document={document}
+        setDocument={setDocument}
+        onExport={exportPDF}
+        onBack={() => { }}
+      />
+    );
+  }
+
+
   const update = (fields) => {
     setFormData((prev) => ({
       ...prev,
@@ -69,20 +90,20 @@ export default function CreateDocumentPage() {
   const handleParse = async () => {
 
     try {
-        const result = await parseQuestions(
-            formData.rawQuestions
-        );
-        update({
-            questions: result.questions,
-        });
-        setStep(2);
+      const result = await parseQuestions(
+        formData.rawQuestions
+      );
+      update({
+        questions: result.questions,
+      });
+      setStep(2);
     } catch (err) {
-        console.error(err);
-        alert("Unable to parse question sheet.");
+      console.error(err);
+      alert("Unable to parse question sheet.");
 
     }
 
-};
+  };
 
   const handleGenerate = async () => {
 
@@ -108,8 +129,6 @@ export default function CreateDocumentPage() {
         designation: formData.designation,
 
         language: formData.language,
-        
-
         logo: formData.logo,
       },
       profile: formData.profile,
@@ -173,13 +192,12 @@ export default function CreateDocumentPage() {
 
             <div
               key={label}
-              className={`cp-step ${
-                i < step
-                  ? "done"
-                  : i === step
+              className={`cp-step ${i < step
+                ? "done"
+                : i === step
                   ? "active"
                   : ""
-              }`}
+                }`}
             >
 
               <span className="cp-step-num">

@@ -1,0 +1,37 @@
+.experiment-page{
+
+    width:100%;
+
+}
+
+.experiment-title{
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+}
+
+.experiment-question{
+
+    margin-bottom:35px;
+
+}
+
+.experiment-question strong{
+
+    display:block;
+
+    margin-bottom:8px;
+
+}
+
+.experiment-sections{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:24px;
+
+}
