@@ -5,6 +5,7 @@ import EditableParagraph from "../blocks/EditableParagraph";
 import InsertBlockButton from "../../InsertBlockButton";
 
 import { useDocument } from "../context/DocumentContext";
+import { Theme } from "../theme/theme";
 
 export default function ExperimentPage({
     experiment,
@@ -18,12 +19,16 @@ export default function ExperimentPage({
 
     return (
 
-        <div className="experiment-page">
+        <div
+            className="experiment-page"
+            style={Theme.document}
+        >
 
             <EditableParagraph
                 tag="h1"
                 className="experiment-title"
                 value={`Experiment ${experiment.number}`}
+                defaultStyle={Theme.experiment.title}
                 onChange={(value) => {
 
                     const match = value.match(/\d+/);
@@ -46,12 +51,14 @@ export default function ExperimentPage({
                     tag="h2"
                     className="experiment-question-title"
                     value="AIM"
+                    defaultStyle={Theme.experiment.aimHeading}
                     onChange={() => {}}
                 />
 
                 <EditableParagraph
                     tag="p"
                     value={experiment.question}
+                    defaultStyle={Theme.experiment.question}
                     onChange={(value) =>
                         updateExperiment(
                             experimentIndex,
@@ -84,6 +91,7 @@ export default function ExperimentPage({
                                     title: "Text",
                                     type: "paragraph",
                                     content: "",
+                                    style: {},
                                 }
                             )
                         }
@@ -96,6 +104,7 @@ export default function ExperimentPage({
                                     title: "Source Code",
                                     type: "code",
                                     content: "",
+                                    style: {},
                                 }
                             )
                         }
@@ -108,6 +117,7 @@ export default function ExperimentPage({
                                     title: "Image",
                                     type: "image",
                                     content: "",
+                                    style: {},
                                 }
                             )
                         }

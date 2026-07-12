@@ -1,10 +1,11 @@
 import EditableParagraph from "./EditableParagraph";
 import EditableCode from "./EditableCode";
+import EditableImage from "./EditableImage";
+import SectionEditor from "./SectionEditor";
+
 import { useDocument } from "../context/DocumentContext";
 
-// import EditableTable from "./EditableTable";
-// import EditableEquation from "./EditableEquation";
-// import EditableImage from "./EditableImage";
+import { Theme } from "../theme/theme";
 
 export default function BlockRenderer({
     section,
@@ -20,38 +21,55 @@ export default function BlockRenderer({
 
             return (
 
-                <div className="paragraph-block">
+                <SectionEditor
+                    experimentIndex={experimentIndex}
+                    sectionIndex={sectionIndex}
+                >
 
-                    <EditableParagraph
-                        tag="h2"
-                        className="paragraph-title"
-                        value={section.title}
-                        onChange={(value) =>
-                            updateSection(
-                                experimentIndex,
-                                sectionIndex,
-                                {
-                                    title: value,
-                                }
-                            )
-                        }
-                    />
+                    <div className="paragraph-block">
 
-                    <EditableParagraph
-                        tag="p"
-                        value={section.content}
-                        onChange={(value) =>
-                            updateSection(
-                                experimentIndex,
-                                sectionIndex,
-                                {
-                                    content: value,
-                                }
-                            )
-                        }
-                    />
+                        <EditableParagraph
+                            tag="h2"
+                            className="paragraph-title"
+                            value={section.title}
+                            defaultStyle={Theme.paragraph.title}
+                            style={section.style?.title || {}}
+                            experimentIndex={experimentIndex}
+                            sectionIndex={sectionIndex}
+                            role="title"
+                            onChange={(value) =>
+                                updateSection(
+                                    experimentIndex,
+                                    sectionIndex,
+                                    {
+                                        title: value,
+                                    }
+                                )
+                            }
+                        />
 
-                </div>
+                        <EditableParagraph
+                            tag="p"
+                            value={section.content}
+                            defaultStyle={Theme.paragraph.content}
+                            style={section.style?.content || {}}
+                            experimentIndex={experimentIndex}
+                            sectionIndex={sectionIndex}
+                            role="content"
+                            onChange={(value) =>
+                                updateSection(
+                                    experimentIndex,
+                                    sectionIndex,
+                                    {
+                                        content: value,
+                                    }
+                                )
+                            }
+                        />
+
+                    </div>
+
+                </SectionEditor>
 
             );
 
@@ -59,43 +77,107 @@ export default function BlockRenderer({
 
             return (
 
-                <div className="paragraph-block">
+                <SectionEditor
+                    experimentIndex={experimentIndex}
+                    sectionIndex={sectionIndex}
+                >
 
-                    <EditableParagraph
-                        tag="h2"
-                        className="paragraph-title"
-                        value={section.title}
-                        onChange={(value) =>
-                            updateSection(
-                                experimentIndex,
-                                sectionIndex,
-                                {
-                                    title: value,
-                                }
-                            )
-                        }
-                    />
+                    <div className="paragraph-block">
 
-                    <EditableCode
-                        value={section.content}
-                        onChange={(value) =>
-                            updateSection(
-                                experimentIndex,
-                                sectionIndex,
-                                {
-                                    content: value,
-                                }
-                            )
-                        }
-                    />
+                        <EditableParagraph
+                            tag="h2"
+                            className="paragraph-title"
+                            value={section.title}
+                            defaultStyle={Theme.code.title}
+                            style={section.style?.title || {}}
+                            experimentIndex={experimentIndex}
+                            sectionIndex={sectionIndex}
+                            role="title"
+                            onChange={(value) =>
+                                updateSection(
+                                    experimentIndex,
+                                    sectionIndex,
+                                    {
+                                        title: value,
+                                    }
+                                )
+                            }
+                        />
 
-                </div>
+                        <EditableCode
+                            value={section.content}
+                            defaultStyle={Theme.code.content}
+                            style={section.style?.content || {}}
+                            experimentIndex={experimentIndex}
+                            sectionIndex={sectionIndex}
+                            role="content"
+                            onChange={(value) =>
+                                updateSection(
+                                    experimentIndex,
+                                    sectionIndex,
+                                    {
+                                        content: value,
+                                    }
+                                )
+                            }
+                        />
+
+                    </div>
+
+                </SectionEditor>
 
             );
 
-        // case "image":
-        // case "table":
-        // case "equation":
+        case "image":
+
+            return (
+
+                <SectionEditor
+                    experimentIndex={experimentIndex}
+                    sectionIndex={sectionIndex}
+                >
+
+                    <div className="paragraph-block">
+
+                        <EditableParagraph
+                            tag="h2"
+                            className="paragraph-title"
+                            value={section.title}
+                            defaultStyle={Theme.paragraph.title}
+                            style={section.style?.title || {}}
+                            experimentIndex={experimentIndex}
+                            sectionIndex={sectionIndex}
+                            role="title"
+                            onChange={(value) =>
+                                updateSection(
+                                    experimentIndex,
+                                    sectionIndex,
+                                    {
+                                        title: value,
+                                    }
+                                )
+                            }
+                        />
+
+                        <EditableImage
+                            value={section.content}
+                            style={section.style?.content || {}}
+                            onChange={(value) =>
+                                updateSection(
+                                    experimentIndex,
+                                    sectionIndex,
+                                    {
+                                        content: value,
+                                    }
+                                )
+                            }
+                        />
+
+                    </div>
+
+                </SectionEditor>
+
+            );
 
         default:
 

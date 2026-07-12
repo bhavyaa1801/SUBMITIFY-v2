@@ -1,12 +1,15 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 
 const DocumentContext = createContext(null);
 
 export function DocumentProvider({
+
     document,
     setDocument,
     children,
 }) {
+
+    const [activeSection, setActiveSection] = useState(null);
 
     const updateMetadata = (key, value) => {
         setDocument(prev => ({
@@ -105,6 +108,211 @@ export function DocumentProvider({
 
     };
 
+    const deleteSection = (
+        experimentIndex,
+        sectionIndex
+    ) => {
+        setDocument(prev => ({
+            ...prev,
+            experiments: prev.experiments.map((exp, expIndex) => {
+                if (expIndex !== experimentIndex)
+                    return exp;
+                return {
+                    ...exp,
+                    sections: exp.sections.filter(
+                        (_, index) => index !== sectionIndex
+                    ),
+                };
+            }),
+        }));
+        setActiveSection(null);
+    };
+
+    const duplicateSection = (
+        experimentIndex,
+        sectionIndex
+    ) => {
+
+        setDocument(prev => ({
+
+            ...prev,
+
+            experiments: prev.experiments.map((exp, expIndex) => {
+
+                if (expIndex !== experimentIndex)
+                    return exp;
+
+                const sections = [...exp.sections];
+
+                const copy = structuredClone(
+                    sections[sectionIndex]
+                );
+
+                sections.splice(
+                    sectionIndex + 1,
+                    0,
+                    copy
+                );
+
+                return {
+
+                    ...exp,
+
+                    sections,
+
+                };
+
+            }),
+
+        }));
+
+    };
+
+    const moveSectionUp = (
+        experimentIndex,
+        sectionIndex
+    ) => {
+
+        if (sectionIndex === 0)
+            return;
+
+        setDocument(prev => ({
+
+            ...prev,
+
+            experiments: prev.experiments.map((exp, expIndex) => {
+
+                if (expIndex !== experimentIndex)
+                    return exp;
+
+                const sections = [...exp.sections];
+
+                [
+                    sections[sectionIndex - 1],
+                    sections[sectionIndex]
+                ] = [
+                        sections[sectionIndex],
+                        sections[sectionIndex - 1]
+                    ];
+
+                return {
+
+                    ...exp,
+
+                    sections,
+
+                };
+
+            }),
+
+        }));
+
+    };
+
+    const moveSectionDown = (
+        experimentIndex,
+        sectionIndex
+    ) => {
+
+        setDocument(prev => ({
+
+            ...prev,
+
+            experiments: prev.experiments.map((exp, expIndex) => {
+
+                if (expIndex !== experimentIndex)
+                    return exp;
+
+                if (
+                    sectionIndex ===
+                    exp.sections.length - 1
+                )
+                    return exp;
+
+                const sections = [...exp.sections];
+
+                [
+                    sections[sectionIndex],
+                    sections[sectionIndex + 1]
+                ] = [
+                        sections[sectionIndex + 1],
+                        sections[sectionIndex]
+                    ];
+
+                return {
+
+                    ...exp,
+
+                    sections,
+
+                };
+
+            }),
+
+        }));
+
+    };
+
+    const updateSectionStyle = (
+
+        experimentIndex,
+
+        sectionIndex,
+
+        target,
+
+        updates,
+
+    ) => {
+
+        setDocument(prev => ({
+
+            ...prev,
+
+            experiments: prev.experiments.map((exp, expIndex) => {
+
+                if (expIndex !== experimentIndex)
+                    return exp;
+
+                return {
+
+                    ...exp,
+
+                    sections: exp.sections.map((section, secIndex) => {
+
+                        if (secIndex !== sectionIndex)
+                            return section;
+
+                        return {
+
+                            ...section,
+
+                            style: {
+
+                                ...section.style,
+
+                                [target]: {
+
+                                    ...(section.style?.[target] || {}),
+
+                                    ...updates,
+
+                                },
+
+                            },
+
+                        };
+
+                    }),
+
+                };
+
+            }),
+
+        }));
+
+    };
+
     return (
         <DocumentContext.Provider
             value={{
@@ -115,6 +323,15 @@ export function DocumentProvider({
                 updateExperimentField,
                 updateSection,
                 insertSection,
+
+                deleteSection,
+                duplicateSection,
+                moveSectionUp,
+                moveSectionDown,
+
+                activeSection,
+                setActiveSection,
+                updateSectionStyle,
             }}
         >
             {children}

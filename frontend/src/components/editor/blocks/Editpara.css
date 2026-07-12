@@ -1,6 +1,6 @@
 .paragraph-block{
 
-    margin-bottom:24px;
+    margin-bottom:1px;
 
 }
 
@@ -34,9 +34,133 @@
 
     white-space: pre-wrap;
 
-    padding:3px;
+    padding:1px;
 
     margin-top:1px;
 
 
+}
+
+/* ============img============== */
+
+.image-block{
+
+    margin:20px 0;
+
+}
+
+.image-label{
+
+    display:block;
+
+    cursor:pointer;
+
+}
+
+.image-placeholder{
+
+    min-height:250px;
+    border:2px dashed #cfcfcf;
+    border-radius:8px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    transition:.2s;
+}
+
+.image-placeholder:hover{
+    border-color:#4f46e5;
+    background:#fafaff;
+}
+
+.image-icon{
+    font-size:48px;
+}
+
+.image-placeholder h3{
+    margin:0;
+    font-size:18px;
+}
+
+.image-placeholder p{
+    margin:0;
+    color:#666;
+}
+
+.image-preview{
+    display:block;
+    max-width:100%;
+    height:auto;
+    margin:auto;
+    border-radius:6px;
+}
+/* =============move,up,down menu========== */
+.section-editor {
+    position: relative;
+    margin: 12px 0;
+    padding: 12px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: .2s;
+}
+
+.section-editor:hover {
+    border-color: #4f46e5;
+}
+
+.section-menu-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgb(216, 212, 212);
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    cursor: pointer;
+    display: none;
+    font-size: 18px;
+}
+
+.section-editor:hover .section-menu-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.section-menu {
+    position: absolute;
+    top: 35px;
+    right: 8px;
+    width: 170px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    z-index: 20;
+}
+
+.section-menu button {
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    border: none;
+    background: white;
+    cursor: pointer;
+}
+
+.section-menu button:hover {
+    background: #f5f5f5;
+}
+
+.section-menu hr {
+    margin: 4px 0;
+}
+
+.active-section{
+    border:2px solid #4f46e5 !important;
+    background:#f8f9ff;
 }

@@ -1,4 +1,5 @@
 import "./CoverPage.css";
+
 import { useDocument } from "../context/DocumentContext";
 import EditableParagraph from "../blocks/EditableParagraph";
 
@@ -44,31 +45,38 @@ export default function CoverPage() {
                 }
             />
 
-            {logo ? (
+            {
 
-                <img
-                    src={logo}
-                    alt="University Logo"
-                    className="logo"
-                />
+                logo ?
 
-            ) : (
+                    <img
+                        src={logo}
+                        alt="University Logo"
+                        className="logo"
+                    />
 
-                <div className="logo-placeholder">
-                    LOGO
-                </div>
+                    :
 
-            )}
+                    <div className="logo-placeholder">
+
+                        LOGO
+
+                    </div>
+
+            }
 
             <p className="year">
 
-                Academic Year:{" "}
+                Academic Year:&nbsp;
 
                 <EditableParagraph
                     tag="span"
                     value={academicYear}
                     onChange={(value) =>
-                        updateMetadata("academicYear", value)
+                        updateMetadata(
+                            "academicYear",
+                            value
+                        )
                     }
                 />
 
@@ -79,7 +87,10 @@ export default function CoverPage() {
                 className="department"
                 value={department}
                 onChange={(value) =>
-                    updateMetadata("department", value)
+                    updateMetadata(
+                        "department",
+                        value
+                    )
                 }
             />
 
@@ -88,25 +99,34 @@ export default function CoverPage() {
                 className="subject"
                 value={subject}
                 onChange={(value) =>
-                    updateMetadata("subject", value)
+                    updateMetadata(
+                        "subject",
+                        value
+                    )
                 }
             />
 
             <EditableParagraph
                 tag="h2"
+                className="practical-title"
                 value="Practical File"
                 onChange={() => {}}
             />
 
             <p className="subject-code">
 
-                (Subject Code:{" "}
+                (
+
+                Subject Code:&nbsp;
 
                 <EditableParagraph
                     tag="span"
                     value={subjectCode}
                     onChange={(value) =>
-                        updateMetadata("subjectCode", value)
+                        updateMetadata(
+                            "subjectCode",
+                            value
+                        )
                     }
                 />
 
@@ -124,11 +144,7 @@ export default function CoverPage() {
 
                             <strong>
 
-                                <EditableParagraph
-                                    tag="span"
-                                    value="Submitted to :"
-                                    onChange={() => {}}
-                                />
+                                Submitted to :
 
                             </strong>
 
@@ -138,7 +154,10 @@ export default function CoverPage() {
                                 tag="span"
                                 value={submittedTo}
                                 onChange={(value) =>
-                                    updateMetadata("submittedTo", value)
+                                    updateMetadata(
+                                        "submittedTo",
+                                        value
+                                    )
                                 }
                             />
 
@@ -148,7 +167,10 @@ export default function CoverPage() {
                                 tag="span"
                                 value={designation}
                                 onChange={(value) =>
-                                    updateMetadata("designation", value)
+                                    updateMetadata(
+                                        "designation",
+                                        value
+                                    )
                                 }
                             />
 
@@ -158,7 +180,10 @@ export default function CoverPage() {
                                 tag="span"
                                 value={department}
                                 onChange={(value) =>
-                                    updateMetadata("department", value)
+                                    updateMetadata(
+                                        "department",
+                                        value
+                                    )
                                 }
                             />
 
@@ -168,11 +193,7 @@ export default function CoverPage() {
 
                             <strong>
 
-                                <EditableParagraph
-                                    tag="span"
-                                    value="Submitted by :"
-                                    onChange={() => {}}
-                                />
+                                Submitted by :
 
                             </strong>
 
@@ -182,43 +203,55 @@ export default function CoverPage() {
                                 tag="span"
                                 value={studentName}
                                 onChange={(value) =>
-                                    updateMetadata("studentName", value)
+                                    updateMetadata(
+                                        "studentName",
+                                        value
+                                    )
                                 }
                             />
 
                             <br />
 
-                            Enrollment No:{" "}
+                            Enrollment No:&nbsp;
 
                             <EditableParagraph
                                 tag="span"
                                 value={enrollmentNo}
                                 onChange={(value) =>
-                                    updateMetadata("enrollmentNo", value)
+                                    updateMetadata(
+                                        "enrollmentNo",
+                                        value
+                                    )
                                 }
                             />
 
                             <br />
 
-                            Course:{" "}
+                            Course:&nbsp;
 
                             <EditableParagraph
                                 tag="span"
                                 value={course}
                                 onChange={(value) =>
-                                    updateMetadata("course", value)
+                                    updateMetadata(
+                                        "course",
+                                        value
+                                    )
                                 }
                             />
 
                             <br />
 
-                            Semester:{" "}
+                            Semester:&nbsp;
 
                             <EditableParagraph
                                 tag="span"
                                 value={semester}
                                 onChange={(value) =>
-                                    updateMetadata("semester", value)
+                                    updateMetadata(
+                                        "semester",
+                                        value
+                                    )
                                 }
                             />
 

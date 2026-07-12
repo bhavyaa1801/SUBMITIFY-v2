@@ -8,7 +8,8 @@
 
     justify-content: center;
 
-    margin: 20px 0;
+    margin: 8px 0;
+  
 
 }
 
@@ -18,7 +19,7 @@
 
     height: 1px;
 
-    background: #dddddd;
+    background: #a6a2a2;
 
 }
 
@@ -34,7 +35,7 @@
 
     border: 1px solid #d0d0d0;
 
-    background: white;
+    background: rgb(228, 225, 225);
 
     cursor: pointer;
 
@@ -44,7 +45,7 @@
 
         transform .25s ease,
 
-        background .2s ease,
+        background .20s ease,
 
         box-shadow .2s ease;
 

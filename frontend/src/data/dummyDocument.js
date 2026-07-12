@@ -35,7 +35,35 @@ const dummyDocument = {
                     title: "Algorithm",
                     type: "paragraph",
                     content:
-                        "1. Initialize pointers...\n2. Reverse links..."
+                        "1. Initialize pointers...\n2. Reverse links...",
+
+                    style: {
+
+                        title: {
+
+                            bold: true,
+                            italic: false,
+                            underline: false,
+
+                            align: "left",
+
+                            fontSize: 22,
+
+                        },
+
+                        content: {
+
+                            bold: false,
+                            italic: false,
+                            underline: false,
+
+                            align: "left",
+
+                            fontSize: 16,
+
+                        }
+
+                    }
                 },
 
                 {
@@ -46,14 +74,74 @@ const dummyDocument = {
 using namespace std;
 int main(){
 
-}`
+}` ,
+
+                    style: {
+
+                        title: {
+
+                            fontSize: 22,
+
+                            bold: true,
+
+                        },
+
+                        content: {
+
+                            fontSize: 15,
+
+                            align: "left",
+
+                        }
+
+                    }
+                },
+
+                {
+                    title: "Image",
+
+                    type: "image",
+
+                    content: "...",
+
+                    style: {
+
+                        title: {},
+
+                        content: {
+
+                            width: 350,
+
+                        }
+
+                    }
+
                 },
 
                 {
                     title: "Output",
                     type: "paragraph",
                     content:
-                        "Linked List Reversed Successfully"
+                        "Linked List Reversed Successfully",
+                    style: {
+
+                        title: {
+
+                            fontSize: 22,
+
+                            bold: true,
+
+                        },
+
+                        content: {
+
+                            fontSize: 16,
+
+                            align: "left",
+
+                        }
+
+                    }
                 }
 
             ]
