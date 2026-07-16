@@ -6,6 +6,7 @@ import InsertBlockButton from "../../InsertBlockButton";
 
 import { useDocument } from "../context/DocumentContext";
 import { Theme } from "../theme/theme";
+import { createSection } from "../utils/createSection";
 
 export default function ExperimentPage({
     experiment,
@@ -87,12 +88,10 @@ export default function ExperimentPage({
                             insertSection(
                                 experimentIndex,
                                 index,
-                                {
-                                    title: "Text",
-                                    type: "paragraph",
-                                    content: "",
-                                    style: {},
-                                }
+                                createSection(
+                                    "paragraph",
+                                    "Text"
+                                )
                             )
                         }
 
@@ -100,12 +99,10 @@ export default function ExperimentPage({
                             insertSection(
                                 experimentIndex,
                                 index,
-                                {
-                                    title: "Source Code",
-                                    type: "code",
-                                    content: "",
-                                    style: {},
-                                }
+                                createSection(
+                                    "code",
+                                    "Source Code"
+                                )
                             )
                         }
 
@@ -113,12 +110,10 @@ export default function ExperimentPage({
                             insertSection(
                                 experimentIndex,
                                 index,
-                                {
-                                    title: "Image",
-                                    type: "image",
-                                    content: "",
-                                    style: {},
-                                }
+                                createSection(
+                                    "image",
+                                    "Image"
+                                )
                             )
                         }
 

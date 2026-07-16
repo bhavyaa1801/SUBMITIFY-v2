@@ -1,6 +1,6 @@
 const dummyDocument = {
     metadata: {
-        institution: "IGDTUW",
+        university: "IGDTUW",
         department: "Computer Science Engineering",
         academicYear: "2025-26",
         semester: "V",
@@ -10,12 +10,13 @@ const dummyDocument = {
         course: "B.Tech",
 
         studentName: "Bhavya Rajput",
-        enrollmentNo: "0123456789",
+        rollNumber: "0123456789",
 
         submittedTo: "Dr. XYZ",
         designation: "Assistant Professor",
 
         language: "English",
+        logo:" ",
     },
 
     experiments: [

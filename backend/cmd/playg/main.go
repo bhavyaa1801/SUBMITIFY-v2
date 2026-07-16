@@ -96,7 +96,7 @@ func main() {
 	// Render HTML
 	//------------------------------------
 
-	r := renderer.New()
+	r := renderer.New(cfg.ServerURL)
 
 	html, err := r.RenderDocument(document)
 	if err != nil {

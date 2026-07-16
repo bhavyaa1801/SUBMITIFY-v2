@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { uploadImage } from "../../services/generate";
 
 const LANGUAGES = [
   "C",
@@ -31,18 +32,19 @@ export default function StepProjectInfo({ data, update, onNext }) {
     onNext();
   };
 
-  const handleLogo = (e) => {
-    const file = e.target.files[0];
+  const handleLogo = async (e) => {
+    const file = e.target.files?.[0];
     if (!file) return;
+    try {
+      const { url } = await uploadImage(file);
+      update({
+        logo: url,
+      });
+      setLogoPreview(url);
+    } catch (err) {
+      alert(err.message);
+    }
 
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      update({ logo: reader.result });
-      setLogoPreview(reader.result);
-    };
-
-    reader.readAsDataURL(file);
   };
 
   return (
@@ -57,13 +59,13 @@ export default function StepProjectInfo({ data, update, onNext }) {
 
       <form onSubmit={handleSubmit} className="step-form">
 
-        {/* Institution */}
+        {/* university */}
 
         <div className="form-section">
 
           <div className="form-section-label">
             <span className="form-section-bullet">▸</span>
-            institution
+            university
           </div>
 
           <div className="form-row">
@@ -101,7 +103,7 @@ export default function StepProjectInfo({ data, update, onNext }) {
                 {logoPreview ? (
                   <>
                     <img
-                      src={logoPreview}
+                      src={`${import.meta.env.VITE_API_URL || "http://localhost:8080"}${logoPreview}`}
                       alt="logo"
                       style={{
                         height: 40,
@@ -136,14 +138,14 @@ export default function StepProjectInfo({ data, update, onNext }) {
           <div className="form-row">
 
             <div className="form-field">
-              <label>institution</label>
+              <label>university</label>
 
               <input
-                placeholder="Institution Name"
-                value={data.institution}
+                placeholder="university Name"
+                value={data.university}
                 onChange={(e) =>
                   update({
-                    institution: e.target.value,
+                    university: e.target.value,
                   })
                 }
               />
@@ -194,7 +196,7 @@ export default function StepProjectInfo({ data, update, onNext }) {
               >
                 <option value="">Select semester</option>
 
-                {[1,2,3,4,5,6,7,8].map((n)=>(
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
                   <option key={n} value={n}>
                     {n} Semester
                   </option>
@@ -226,9 +228,9 @@ export default function StepProjectInfo({ data, update, onNext }) {
               <input
                 placeholder="Data Structures"
                 value={data.subject}
-                onChange={(e)=>
+                onChange={(e) =>
                   update({
-                    subject:e.target.value,
+                    subject: e.target.value,
                   })
                 }
               />
@@ -242,9 +244,9 @@ export default function StepProjectInfo({ data, update, onNext }) {
               <input
                 placeholder="BCS101"
                 value={data.subjectCode}
-                onChange={(e)=>
+                onChange={(e) =>
                   update({
-                    subjectCode:e.target.value,
+                    subjectCode: e.target.value,
                   })
                 }
               />
@@ -262,9 +264,9 @@ export default function StepProjectInfo({ data, update, onNext }) {
               <input
                 placeholder="B.Tech"
                 value={data.course}
-                onChange={(e)=>
+                onChange={(e) =>
                   update({
-                    course:e.target.value,
+                    course: e.target.value,
                   })
                 }
               />
@@ -277,9 +279,9 @@ export default function StepProjectInfo({ data, update, onNext }) {
 
               <select
                 value={data.language}
-                onChange={(e)=>
+                onChange={(e) =>
                   update({
-                    language:e.target.value,
+                    language: e.target.value,
                   })
                 }
               >
@@ -288,7 +290,7 @@ export default function StepProjectInfo({ data, update, onNext }) {
                   Select language
                 </option>
 
-                {LANGUAGES.map(lang=>(
+                {LANGUAGES.map(lang => (
                   <option key={lang} value={lang}>
                     {lang}
                   </option>
@@ -310,14 +312,14 @@ export default function StepProjectInfo({ data, update, onNext }) {
 
               <select
                 value={data.profile}
-                onChange={(e)=>
+                onChange={(e) =>
                   update({
-                    profile:e.target.value,
+                    profile: e.target.value,
                   })
                 }
               >
 
-                {PROFILES.map(profile=>(
+                {PROFILES.map(profile => (
                   <option
                     key={profile.value}
                     value={profile.value}
@@ -352,9 +354,9 @@ export default function StepProjectInfo({ data, update, onNext }) {
               <input
                 placeholder="Student Name"
                 value={data.studentName}
-                onChange={(e)=>
+                onChange={(e) =>
                   update({
-                    studentName:e.target.value,
+                    studentName: e.target.value,
                   })
                 }
               />
@@ -367,10 +369,10 @@ export default function StepProjectInfo({ data, update, onNext }) {
 
               <input
                 placeholder="Enrollment Number"
-                value={data.enrollmentNo}
-                onChange={(e)=>
+                value={data.rollNumber}
+                onChange={(e) =>
                   update({
-                    enrollmentNo:e.target.value,
+                    rollNumber: e.target.value,
                   })
                 }
               />
@@ -388,9 +390,9 @@ export default function StepProjectInfo({ data, update, onNext }) {
               <input
                 placeholder="Professor Name"
                 value={data.submittedTo}
-                onChange={(e)=>
+                onChange={(e) =>
                   update({
-                    submittedTo:e.target.value,
+                    submittedTo: e.target.value,
                   })
                 }
               />
@@ -404,9 +406,9 @@ export default function StepProjectInfo({ data, update, onNext }) {
               <input
                 placeholder="Assistant Professor"
                 value={data.designation}
-                onChange={(e)=>
+                onChange={(e) =>
                   update({
-                    designation:e.target.value,
+                    designation: e.target.value,
                   })
                 }
               />

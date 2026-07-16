@@ -2,6 +2,8 @@ import "./CoverPage.css";
 
 import { useDocument } from "../context/DocumentContext";
 import EditableParagraph from "../blocks/EditableParagraph";
+import EditableImage from "../blocks/EditableImage";
+
 
 export default function CoverPage() {
 
@@ -12,18 +14,20 @@ export default function CoverPage() {
 
     const metadata = document.metadata;
 
+    console.log(document.metadata)
+
     const {
-        institution,
+        university,
         department,
-        academicYear,
+        academic_year,
 
         subject,
-        subjectCode,
+        subject_code,
 
-        studentName,
-        enrollmentNo,
+        student_name,
+        roll_number,
 
-        submittedTo,
+        submitted_to,
         designation,
 
         course,
@@ -39,31 +43,31 @@ export default function CoverPage() {
             <EditableParagraph
                 tag="h1"
                 className="university"
-                value={institution}
+                value={university}
                 onChange={(value) =>
-                    updateMetadata("institution", value)
+                    updateMetadata("university", value)
                 }
             />
 
-            {
+            <div className="cover-logo">
 
-                logo ?
+                <EditableImage
+                    value={
+                        logo
+                            ? `${import.meta.env.VITE_API_URL || "http://localhost:8080"}${logo}`
+                            : ""
+                    }
+                    placeholder="LOGO"
+                    style={{
+                        width: 140,
+                        align: "center",
+                    }}
+                    onChange={(value) =>
+                        updateMetadata("logo", value)
+                    }
+                />
 
-                    <img
-                        src={logo}
-                        alt="University Logo"
-                        className="logo"
-                    />
-
-                    :
-
-                    <div className="logo-placeholder">
-
-                        LOGO
-
-                    </div>
-
-            }
+            </div>
 
             <p className="year">
 
@@ -71,10 +75,10 @@ export default function CoverPage() {
 
                 <EditableParagraph
                     tag="span"
-                    value={academicYear}
+                    value={academic_year}
                     onChange={(value) =>
                         updateMetadata(
-                            "academicYear",
+                            "academic_year",
                             value
                         )
                     }
@@ -110,7 +114,7 @@ export default function CoverPage() {
                 tag="h2"
                 className="practical-title"
                 value="Practical File"
-                onChange={() => {}}
+                onChange={() => { }}
             />
 
             <p className="subject-code">
@@ -121,10 +125,10 @@ export default function CoverPage() {
 
                 <EditableParagraph
                     tag="span"
-                    value={subjectCode}
+                    value={subject_code}
                     onChange={(value) =>
                         updateMetadata(
-                            "subjectCode",
+                            "subject_code",
                             value
                         )
                     }
@@ -152,10 +156,10 @@ export default function CoverPage() {
 
                             <EditableParagraph
                                 tag="span"
-                                value={submittedTo}
+                                value={submitted_to}
                                 onChange={(value) =>
                                     updateMetadata(
-                                        "submittedTo",
+                                        "submitted_to",
                                         value
                                     )
                                 }
@@ -201,10 +205,10 @@ export default function CoverPage() {
 
                             <EditableParagraph
                                 tag="span"
-                                value={studentName}
+                                value={student_name}
                                 onChange={(value) =>
                                     updateMetadata(
-                                        "studentName",
+                                        "student_name",
                                         value
                                     )
                                 }
@@ -216,10 +220,10 @@ export default function CoverPage() {
 
                             <EditableParagraph
                                 tag="span"
-                                value={enrollmentNo}
+                                value={roll_number}
                                 onChange={(value) =>
                                     updateMetadata(
-                                        "enrollmentNo",
+                                        "roll_number",
                                         value
                                     )
                                 }

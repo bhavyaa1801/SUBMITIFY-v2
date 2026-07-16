@@ -36,3 +36,22 @@ export async function generateDocument(payload) {
 
     return response.json();
 }
+
+export async function uploadImage(file) {
+
+    const formData = new FormData();
+
+    formData.append("image", file);
+
+    const response = await fetch(`${BASE_URL}/upload`, {
+        method: "POST",
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    return response.json();
+}
+

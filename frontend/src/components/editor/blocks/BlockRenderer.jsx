@@ -14,6 +14,11 @@ export default function BlockRenderer({
 }) {
 
     const { updateSection } = useDocument();
+    const style = {
+    title: section.style?.title ?? {},
+    content: section.style?.content ?? {},
+    image: section.style?.image ?? {},
+};
 
     switch (section.type) {
 
@@ -33,7 +38,7 @@ export default function BlockRenderer({
                             className="paragraph-title"
                             value={section.title}
                             defaultStyle={Theme.paragraph.title}
-                            style={section.style?.title || {}}
+                            style={style.title}
                             experimentIndex={experimentIndex}
                             sectionIndex={sectionIndex}
                             role="title"
@@ -52,7 +57,7 @@ export default function BlockRenderer({
                             tag="p"
                             value={section.content}
                             defaultStyle={Theme.paragraph.content}
-                            style={section.style?.content || {}}
+                            style={style.content}
                             experimentIndex={experimentIndex}
                             sectionIndex={sectionIndex}
                             role="content"
@@ -89,7 +94,7 @@ export default function BlockRenderer({
                             className="paragraph-title"
                             value={section.title}
                             defaultStyle={Theme.code.title}
-                            style={section.style?.title || {}}
+                            style={style.title}
                             experimentIndex={experimentIndex}
                             sectionIndex={sectionIndex}
                             role="title"
@@ -107,7 +112,7 @@ export default function BlockRenderer({
                         <EditableCode
                             value={section.content}
                             defaultStyle={Theme.code.content}
-                            style={section.style?.content || {}}
+                            style={style.content}
                             experimentIndex={experimentIndex}
                             sectionIndex={sectionIndex}
                             role="content"
@@ -144,7 +149,7 @@ export default function BlockRenderer({
                             className="paragraph-title"
                             value={section.title}
                             defaultStyle={Theme.paragraph.title}
-                            style={section.style?.title || {}}
+                            style={style.title}
                             experimentIndex={experimentIndex}
                             sectionIndex={sectionIndex}
                             role="title"
@@ -161,7 +166,7 @@ export default function BlockRenderer({
 
                         <EditableImage
                             value={section.content}
-                            style={section.style?.content || {}}
+                            style={style.image}
                             onChange={(value) =>
                                 updateSection(
                                     experimentIndex,

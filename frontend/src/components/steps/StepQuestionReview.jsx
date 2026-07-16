@@ -79,8 +79,8 @@ export default function StepQuestionReview({
         <div className="review-table">
 
           <div className="review-row">
-            <span>Institution</span>
-            <span>{data.institution || "—"}</span>
+            <span>university</span>
+            <span>{data.university || "—"}</span>
           </div>
 
           <div className="review-row">
@@ -120,7 +120,7 @@ export default function StepQuestionReview({
 
           <div className="review-row">
             <span>Enrollment No.</span>
-            <span>{data.enrollmentNo || "—"}</span>
+            <span>{data.rollNumber || "—"}</span>
           </div>
 
           <div className="review-row">

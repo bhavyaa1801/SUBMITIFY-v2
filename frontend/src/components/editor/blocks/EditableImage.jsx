@@ -1,24 +1,75 @@
 import "./Editpara.css";
 
+const API =
+    import.meta.env.VITE_API_URL ||
+    "http://localhost:8080";
+
 export default function EditableImage({
     value,
     onChange,
     style = {},
+    placeholder = "Upload Image",
 }) {
 
-    const updateImage = (file) => {
+    const updateImage = async (file) => {
 
         if (!file) return;
 
-        const url = URL.createObjectURL(file);
+        const form = new FormData();
 
-        onChange?.(url);
+        form.append("image", file);
+
+        try {
+
+            const res = await fetch(
+
+                `${API}/upload`,
+
+                {
+
+                    method: "POST",
+
+                    body: form,
+
+                }
+
+            );
+
+            if (!res.ok) {
+
+                throw new Error(
+                    "Upload failed"
+                );
+
+            }
+
+            const data = await res.json();
+
+            onChange?.(
+
+                `${API}${data.url}`
+
+            );
+
+        }
+
+        catch (err) {
+
+            console.error(err);
+
+            alert(
+                "Image upload failed."
+            );
+
+        }
 
     };
 
     const handleSelect = (e) => {
 
-        updateImage(e.target.files?.[0]);
+        updateImage(
+            e.target.files?.[0]
+        );
 
     };
 
@@ -26,7 +77,9 @@ export default function EditableImage({
 
         e.preventDefault();
 
-        updateImage(e.dataTransfer.files?.[0]);
+        updateImage(
+            e.dataTransfer.files?.[0]
+        );
 
     };
 
@@ -76,12 +129,14 @@ export default function EditableImage({
                                 🖼
                             </div>
 
-                            <h3>Upload Image</h3>
+                            <h3>
+
+                                {placeholder}
+
+                            </h3>
 
                             <p>
-
                                 Click or drag & drop an image here
-
                             </p>
 
                         </div>

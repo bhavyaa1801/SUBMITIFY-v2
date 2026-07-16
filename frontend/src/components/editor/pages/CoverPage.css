@@ -25,35 +25,35 @@
 
 }
 
-.logo{
+.cover-logo{
 
     width:140px;
 
-    height:140px;
-
     margin:12px auto;
-
-    display:block;
-
-    object-fit:contain;
 
 }
 
-.logo-placeholder{
+.cover-logo .image-block{
+
+    margin:0;
+
+}
+
+.cover-logo .image-placeholder{
 
     width:140px;
 
     height:140px;
 
-    margin:12px auto;
+}
 
-    border:1px dashed #999;
+.cover-logo .image-preview{
 
-    display:flex;
+    width:140px;
 
-    justify-content:center;
+    height:140px;
 
-    align-items:center;
+    object-fit:contain;
 
 }
 

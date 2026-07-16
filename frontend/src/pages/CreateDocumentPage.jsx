@@ -10,7 +10,7 @@ import GeneratingScreen from "../components/GeneratingScreen";
 //yha pr import mai change hoga 
 
 import DocumentEditor from "../components/editor/DocumentEditor/DocumentEditor";
-import dummyDocument from "../data/dummyDocument";
+// import dummyDocument from "../data/dummyDocument";
 
 import FloatingCode from "../components/FloatingCode";
 
@@ -21,7 +21,6 @@ import {
 } from "../services/generate";
 
 
-const DEV_MODE = true;
 
 
 const STEPS = [
@@ -36,12 +35,12 @@ export default function CreateDocumentPage() {
 
   const [status, setStatus] = useState("form");
 
-  const [document, setDocument] = useState(dummyDocument);
+  const [document, setDocument] = useState(null);
 
   const [formData, setFormData] = useState({
 
-    // Institution
-    institution: "",
+    // university
+    university: "",
     department: "",
     academicYear: "",
     semester: "",
@@ -53,7 +52,7 @@ export default function CreateDocumentPage() {
 
     // Student
     studentName: "",
-    enrollmentNo: "",
+    rollNumber: "",
     submittedTo: "",
     designation: "",
 
@@ -67,17 +66,6 @@ export default function CreateDocumentPage() {
     questions: [],
   });
 
-  // yha se ye delted hoga
-  if (DEV_MODE) {
-    return (
-      <DocumentEditor
-        document={document}
-        setDocument={setDocument}
-        onExport={exportPDF}
-        onBack={() => { }}
-      />
-    );
-  }
 
 
   const update = (fields) => {
@@ -112,23 +100,25 @@ export default function CreateDocumentPage() {
     const payload = {
 
       metadata: {
+        university: formData.university,
+        academic_year: formData.academicYear,
 
-        institution: formData.institution,
         department: formData.department,
-        academicYear: formData.academicYear,
-        semester: formData.semester,
 
         subject: formData.subject,
-        subjectCode: formData.subjectCode,
+        subject_code: formData.subjectCode,
+
         course: formData.course,
-
-        studentName: formData.studentName,
-        enrollmentNo: formData.enrollmentNo,
-
-        submittedTo: formData.submittedTo,
-        designation: formData.designation,
+        semester: formData.semester,
 
         language: formData.language,
+
+        student_name: formData.studentName,
+        roll_number: formData.rollNumber,
+
+        submitted_to: formData.submittedTo,
+        designation: formData.designation,
+
         logo: formData.logo,
       },
       profile: formData.profile,
@@ -138,6 +128,8 @@ export default function CreateDocumentPage() {
     try {
 
       const doc = await generateDocument(payload);
+      console.log("PAYLOAD");
+      console.log(payload);
 
       setDocument(doc);
 

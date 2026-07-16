@@ -29,7 +29,7 @@ func main() {
 
 	docBuilder := builder.New()
 
-	r := renderer.New()
+	r := renderer.New(cfg.ServerURL)
 
 	exporter := pdf.New("wkhtmltopdf")
 
@@ -55,16 +55,32 @@ func main() {
 		exportService,
 	)
 
-	// Create router
+	// ---------------- Router ----------------
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/parse", handler.Parse)
 	mux.HandleFunc("/generate", handler.Generate)
 	mux.HandleFunc("/export/pdf", handler.ExportPDF)
 
+	// Image Upload
+	mux.HandleFunc("/upload", handler.UploadImage)
+
+	// Serve uploaded images
+	mux.Handle(
+		"/uploads/",
+		http.StripPrefix(
+			"/uploads/",
+			http.FileServer(
+				http.Dir("assets/uploads"),
+			),
+		),
+	)
+
+	// Demo Routes
 	mux.HandleFunc("/demo", handlers.DemoDocument)
-	mux.HandleFunc("/demo/html", handlers.DemoHTML)
-	mux.HandleFunc("/demo/pdf", handlers.DemoPDF)
+	// mux.HandleFunc("/demo/html", handlers.DemoHTML)
+	// mux.HandleFunc("/demo/pdf", handlers.DemoPDF)
 
 	fmt.Println("Submitify V2 running on :8080")
 
