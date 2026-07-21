@@ -3,6 +3,9 @@ import "./Editpara.css";
 import { useEffect, useRef } from "react";
 
 import { useDocument } from "../context/DocumentContext";
+import { useEditorMode } from "../context/EditorModeContext";
+
+
 
 export default function EditableCode({
     value,
@@ -16,13 +19,14 @@ export default function EditableCode({
 
     const ref = useRef(null);
 
-    const {
-        setActiveSection,
-    } = useDocument();
+    const { isPrint } = useEditorMode();
+
+    const { setActiveSection } = useDocument();
 
     useEffect(() => {
 
         if (
+            !isPrint &&
             ref.current &&
             ref.current.innerText !== (value ?? "")
         ) {
@@ -31,9 +35,11 @@ export default function EditableCode({
 
         }
 
-    }, [value]);
+    }, [value, isPrint]);
 
     const handleBlur = (e) => {
+
+        if (isPrint) return;
 
         onChange?.(
             e.currentTarget.innerText
@@ -42,6 +48,8 @@ export default function EditableCode({
     };
 
     const handleFocus = () => {
+
+        if (isPrint) return;
 
         setActiveSection({
 
@@ -54,6 +62,58 @@ export default function EditableCode({
 
     };
 
+    const commonStyle = {
+
+        ...defaultStyle,
+
+        fontWeight:
+            style.bold
+                ? "700"
+                : defaultStyle.fontWeight || "400",
+
+        fontStyle:
+            style.italic
+                ? "italic"
+                : "normal",
+
+        textDecoration:
+            style.underline
+                ? "underline"
+                : "none",
+
+        textAlign:
+            style.align ||
+            defaultStyle.textAlign,
+
+        fontSize:
+            style.fontSize ||
+            defaultStyle.fontSize,
+
+    };
+
+    // ============================
+    // PRINT MODE
+    // ============================
+
+    if (isPrint) {
+
+        return (
+
+            <pre
+                className="code-block code-block-print"
+                style={commonStyle}
+            >
+                {value ?? ""}
+            </pre>
+
+        );
+
+    }
+
+    // ============================
+    // EDIT MODE
+    // ============================
+
     return (
 
         <pre
@@ -64,34 +124,7 @@ export default function EditableCode({
             spellCheck={false}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            style={{
-
-                ...defaultStyle,
-
-                fontWeight:
-                    style.bold
-                        ? "700"
-                        : defaultStyle.fontWeight || "400",
-
-                fontStyle:
-                    style.italic
-                        ? "italic"
-                        : "normal",
-
-                textDecoration:
-                    style.underline
-                        ? "underline"
-                        : "none",
-
-                textAlign:
-                    style.align ||
-                    defaultStyle.textAlign,
-
-                fontSize:
-                    style.fontSize ||
-                    defaultStyle.fontSize,
-
-            }}
+            style={commonStyle}
         />
 
     );

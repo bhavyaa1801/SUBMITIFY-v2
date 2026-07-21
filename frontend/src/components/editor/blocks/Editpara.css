@@ -40,7 +40,53 @@
 
 
 }
+.print-page-break{
 
+    break-before:page;
+
+    page-break-before:always;
+
+}
+/* ================= PRINT CODE ================= */
+
+.code-block-print {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0;
+    margin:0;
+
+    padding:0;
+
+    white-space:pre-wrap;
+
+    overflow:visible;
+
+}
+
+.code-print-chunk {
+
+    font-family: "Times New Roman", serif;
+
+    white-space: pre-wrap;
+
+    margin: 0;
+
+    padding: 0;
+
+    overflow: visible;
+
+    background: transparent;
+
+    border: none;
+
+    break-inside: auto;
+
+    page-break-inside: auto;
+
+}
 /* ============img============== */
 
 .image-block{
@@ -99,8 +145,8 @@
 /* =============move,up,down menu========== */
 .section-editor {
     position: relative;
-    margin: 12px 0;
-    padding: 12px;
+    margin: 8px 0;
+    padding: 4px 12px;
     border: 2px solid transparent;
     border-radius: 8px;
     transition: .2s;
@@ -163,4 +209,23 @@
 .active-section{
     border:2px solid #4f46e5 !important;
     background:#f8f9ff;
+}
+
+.paragraph-title,
+.code-title{
+
+    margin:0;
+
+}
+
+.paragraph-content{
+
+    margin:0;
+
+}
+
+.code-block{
+
+    margin:0;
+
 }

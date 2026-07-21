@@ -87,8 +87,10 @@ export default function BlockRenderer({
                     sectionIndex={sectionIndex}
                 >
 
-                    <div className="paragraph-block">
-
+                    <div className="paragraph-block"
+                    data-measure={`section-${sectionIndex}`}
+                    data-type={section.type}>
+                      {section.title && (
                         <EditableParagraph
                             tag="h2"
                             className="paragraph-title"
@@ -108,7 +110,9 @@ export default function BlockRenderer({
                                 )
                             }
                         />
+                        )}
 
+                        {section.title && (
                         <EditableCode
                             value={section.content}
                             defaultStyle={Theme.code.content}
@@ -126,7 +130,7 @@ export default function BlockRenderer({
                                 )
                             }
                         />
-
+                        )}
                     </div>
 
                 </SectionEditor>

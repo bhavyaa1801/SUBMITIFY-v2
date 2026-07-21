@@ -1,20 +1,20 @@
 import "./DocumentEditor.css";
-
-import Page from "../Page/Page";
-
-import CoverPage from "../pages/CoverPage";
-import IndexPage from "../pages/IndexPage";
-import ExperimentPage from "../pages/ExperimentPage";
+import "../styles/print.css";
 
 import { DocumentProvider } from "../context/DocumentContext";
+import { EditorModeProvider } from "../context/EditorModeContext";
 
 import EditorToolbar from "../toolbar/EditorToolbar";
+import DocumentRenderer from "../layout/DocumentRenderer";
 
 function DocumentEditor({
     document,
     setDocument,
     onExport,
+    mode = "edit",
 }) {
+
+    const isPrint = mode === "print";
 
     return (
 
@@ -23,42 +23,27 @@ function DocumentEditor({
             setDocument={setDocument}
         >
 
-            <EditorToolbar
-                onExport={onExport}
-            />
+            <EditorModeProvider mode={mode}>
 
-            <main className="document-workspace">
+                {!isPrint && (
+                    <EditorToolbar
+                        onExport={onExport}
+                    />
+                )}
 
-                <div className="document-editor">
+                <main
+                    className={`document-workspace ${
+                        isPrint ? "document-print" : ""
+                    }`}
+                >
 
-                    <Page>
-                        <CoverPage
-                            metadata={document.metadata}
-                        />
-                    </Page>
+                    <DocumentRenderer
+                        document={document}
+                    />
 
-                    <Page>
-                        <IndexPage
-                            experiments={document.experiments}
-                        />
-                    </Page>
+                </main>
 
-                    {document.experiments.map((experiment, index) => (
-
-                        <Page key={experiment.number}>
-
-                            <ExperimentPage
-                                experiment={experiment}
-                                experimentIndex={index}
-                            />
-
-                        </Page>
-
-                    ))}
-
-                </div>
-
-            </main>
+            </EditorModeProvider>
 
         </DocumentProvider>
 

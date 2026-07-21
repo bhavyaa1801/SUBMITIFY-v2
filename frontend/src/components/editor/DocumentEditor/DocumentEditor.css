@@ -17,17 +17,26 @@
 
     width: fit-content;
 
-    margin: 0 auto;
+    margin: auto;
 
     display: flex;
 
     flex-direction: column;
 
     align-items: center;
-    --zoom:0.64;
 
-    transform:scale(var(--zoom));
+}
 
-    transform-origin:top center;
+@media screen {
+
+    .document-editor{
+
+        --zoom:.64;
+
+        transform:scale(var(--zoom));
+
+        transform-origin:top center;
+
+    }
 
 }

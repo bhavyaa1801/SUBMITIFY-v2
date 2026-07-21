@@ -2,6 +2,7 @@ import "./Editpara.css";
 import { useState, useRef, useEffect } from "react";
 
 import { useDocument } from "../context/DocumentContext";
+import { useEditorMode } from "../context/EditorModeContext";
 
 export default function SectionEditor({
 
@@ -24,6 +25,11 @@ export default function SectionEditor({
 
     } = useDocument();
 
+    const { isPrint } = useEditorMode();
+    if (isPrint) {
+      return children;
+    }
+
     const [open, setOpen] = useState(false);
 
     const menuRef = useRef(null);
@@ -33,6 +39,8 @@ export default function SectionEditor({
         activeSection?.sectionIndex === sectionIndex;
 
     useEffect(() => {
+
+        if (isPrint) return;
 
         function handleClickOutside(event) {
 
@@ -59,110 +67,118 @@ export default function SectionEditor({
 
         };
 
-    }, []);
+    }, [isPrint]);
 
     return (
 
         <div
-            className={`section-editor ${isActive ? "active-section" : ""}`}
-            onClick={() =>
+            className={`section-editor ${!isPrint && isActive ? "active-section" : ""}`}
+            onClick={() => {
+
+                if (isPrint) return;
+
                 setActiveSection({
                     experimentIndex,
                     sectionIndex,
-                })
-            }
+                });
+
+            }}
         >
 
-            <div ref={menuRef}>
+            {!isPrint && (
 
-                <button
-                    className="section-menu-button"
-                    onClick={(e) => {
+                <div ref={menuRef}>
 
-                        e.stopPropagation();
+                    <button
+                        className="section-menu-button"
+                        onClick={(e) => {
 
-                        setOpen(prev => !prev);
+                            e.stopPropagation();
 
-                    }}
-                >
-                    ⋮⋮
-                </button>
+                            setOpen(prev => !prev);
 
-                {
+                        }}
+                    >
+                        ⋮⋮
+                    </button>
 
-                    open && (
+                    {
 
-                        <div className="section-menu">
+                        open && (
 
-                            <button
-                                onClick={() => {
+                            <div className="section-menu">
 
-                                    duplicateSection(
-                                        experimentIndex,
-                                        sectionIndex
-                                    );
+                                <button
+                                    onClick={() => {
 
-                                    setOpen(false);
+                                        duplicateSection(
+                                            experimentIndex,
+                                            sectionIndex
+                                        );
 
-                                }}
-                            >
-                                Duplicate
-                            </button>
+                                        setOpen(false);
 
-                            <button
-                                onClick={() => {
+                                    }}
+                                >
+                                    Duplicate
+                                </button>
 
-                                    deleteSection(
-                                        experimentIndex,
-                                        sectionIndex
-                                    );
+                                <button
+                                    onClick={() => {
 
-                                    setOpen(false);
+                                        deleteSection(
+                                            experimentIndex,
+                                            sectionIndex
+                                        );
 
-                                }}
-                            >
-                                Delete
-                            </button>
+                                        setOpen(false);
 
-                            <hr />
+                                    }}
+                                >
+                                    Delete
+                                </button>
 
-                            <button
-                                onClick={() => {
+                                <hr />
 
-                                    moveSectionUp(
-                                        experimentIndex,
-                                        sectionIndex
-                                    );
+                                <button
+                                    onClick={() => {
 
-                                    setOpen(false);
+                                        moveSectionUp(
+                                            experimentIndex,
+                                            sectionIndex
+                                        );
 
-                                }}
-                            >
-                                Move Up
-                            </button>
+                                        setOpen(false);
 
-                            <button
-                                onClick={() => {
+                                    }}
+                                >
+                                    Move Up
+                                </button>
 
-                                    moveSectionDown(
-                                        experimentIndex,
-                                        sectionIndex
-                                    );
+                                <button
+                                    onClick={() => {
 
-                                    setOpen(false);
+                                        moveSectionDown(
+                                            experimentIndex,
+                                            sectionIndex
+                                        );
 
-                                }}
-                            >
-                                Move Down
-                            </button>
+                                        setOpen(false);
 
-                        </div>
+                                    }}
+                                >
+                                    Move Down
+                                </button>
 
-                    )
+                            </div>
 
-                }
+                        )
 
-            </div>
+                    }
+
+                </div>
+
+            )}
 
             {children}
 

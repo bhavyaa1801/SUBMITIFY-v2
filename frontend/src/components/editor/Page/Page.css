@@ -1,22 +1,18 @@
 .page {
 
     width: 210mm;
-
     min-height: 297mm;
 
-    margin: 16px auto;
-
-    padding: 10mm 15mm;
-
     background: white;
-
     color: #000;
 
+    position: relative;
     box-sizing: border-box;
 
-    position: relative;
+    margin: 20px auto;
+    padding: 15mm;
 
-    overflow: hidden;
+    overflow: visible;
 
     box-shadow:
         0 4px 12px rgba(0,0,0,.08),
@@ -24,12 +20,33 @@
 
 }
 
+/* Page Border */
+
+.page::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 10mm;
+    left: 10mm;
+    right: 10mm;
+    bottom: 10mm;
+
+    border: 1.2px solid #111;
+
+    pointer-events: none;
+
+}
+
+/* Mobile */
+
 @media (max-width: 900px) {
 
     .page {
 
         width: 100%;
-        
+
         min-height: auto;
 
         margin: 12px;
@@ -37,22 +54,37 @@
         padding: 20px;
 
         box-shadow: none;
+
     }
 
 }
-.page::before{
 
-    content:"";
+/* Print */
 
-    position:absolute;
+@media print {
 
-    top:10mm;
-    left:10mm;
-    right:10mm;
-    bottom:10mm;
+    .page {
 
-    border:1.2px solid #111;
+        width: 210mm;
+        min-height: 297mm;
 
-    pointer-events:none;
+        margin: 0;
+        padding: 15mm;
+
+        box-shadow: none;
+
+        overflow: visible;
+
+        break-after: page;
+        page-break-after: always;
+
+    }
+
+    .page:last-child {
+
+        break-after: auto;
+        page-break-after: auto;
+
+    }
 
 }

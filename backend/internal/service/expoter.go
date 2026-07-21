@@ -1,33 +1,48 @@
 package service
 
 import (
-	"github.com/bhavyaa1801/submitify-v2/internal/expoter/pdf"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+
 	"github.com/bhavyaa1801/submitify-v2/internal/models"
-	"github.com/bhavyaa1801/submitify-v2/internal/renderer"
 )
 
-type ExportService struct {
-	renderer *renderer.Renderer
-	exporter *pdf.Exporter
-}
+const ExportServiceURL = "http://localhost:3001/export"
 
-func NewExportService(
-	renderer *renderer.Renderer,
-	exporter *pdf.Exporter,
-) *ExportService {
+type ExportService struct{}
 
-	return &ExportService{
-		renderer: renderer,
-		exporter: exporter,
-	}
+func NewExportService() *ExportService {
+	return &ExportService{}
 }
 
 func (s *ExportService) ExportPDF(document models.Document) ([]byte, error) {
 
-	html, err := s.renderer.RenderDocument(document)
+	payload, err := json.Marshal(document)
 	if err != nil {
 		return nil, err
 	}
 
-	return s.exporter.Export(html)
+	resp, err := http.Post(
+		ExportServiceURL,
+		"application/json",
+		bytes.NewBuffer(payload),
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+
+		body, _ := io.ReadAll(resp.Body)
+
+		return nil, fmt.Errorf("%s", body)
+	}
+
+	return io.ReadAll(resp.Body)
 }

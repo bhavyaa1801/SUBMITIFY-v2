@@ -19,7 +19,7 @@ export const Theme = {
             fontSize: 20,
 
             fontWeight: "700",
-
+            textDecoration: "underline",
             textAlign: "center",
 
             marginBottom: 25,
@@ -30,7 +30,7 @@ export const Theme = {
         aimHeading: {
 
             fontSize: 16,
-
+            textDecoration: "underline",
             fontWeight: "700",
 
             marginTop: 18,
@@ -56,12 +56,10 @@ export const Theme = {
         title: {
 
             fontSize: 16,
-
             fontWeight: "700",
-
-            marginTop: 24,
-
-            marginBottom: 12,
+            textDecoration: "underline",
+            marginTop: 14,
+            marginBottom: 4,
 
         },
 
@@ -69,7 +67,7 @@ export const Theme = {
 
             fontSize: 14,
 
-            lineHeight: 1.7,
+            lineHeight: 1.5,
 
             textAlign: "left",
 
@@ -84,10 +82,11 @@ export const Theme = {
             fontSize: 16,
 
             fontWeight: "700",
+            textDecoration: "underline",
 
-            marginTop: 24,
+            marginTop: 14,
 
-            marginBottom: 12,
+            marginBottom: 4,
 
         },
 
@@ -95,9 +94,9 @@ export const Theme = {
 
             fontFamily: '"Times New Roman", serif',
 
-            fontSize: 19,
+            fontSize: 14,
 
-            lineHeight: 1.5,
+            lineHeight: 1.35,
 
             whiteSpace: "pre-wrap",
 

@@ -1,4 +1,6 @@
 import "./Editpara.css";
+import { useEditorMode } from "../context/EditorModeContext";
+
 
 const API =
     import.meta.env.VITE_API_URL ||
@@ -10,6 +12,8 @@ export default function EditableImage({
     style = {},
     placeholder = "Upload Image",
 }) {
+
+    const { isPrint } = useEditorMode();
 
     const updateImage = async (file) => {
 
@@ -66,7 +70,7 @@ export default function EditableImage({
     };
 
     const handleSelect = (e) => {
-
+        if (isPrint) return;
         updateImage(
             e.target.files?.[0]
         );
@@ -76,7 +80,7 @@ export default function EditableImage({
     const handleDrop = (e) => {
 
         e.preventDefault();
-
+        if (isPrint) return;
         updateImage(
             e.dataTransfer.files?.[0]
         );
@@ -84,7 +88,7 @@ export default function EditableImage({
     };
 
     const handleDragOver = (e) => {
-
+        if (isPrint) return;
         e.preventDefault();
 
     };
@@ -93,8 +97,8 @@ export default function EditableImage({
 
         <div
             className="image-block"
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
+            onDrop={!isPrint ? handleDrop : undefined}
+            onDragOver={!isPrint ? handleDragOver : undefined}
         >
 
             <label className="image-label">
@@ -118,7 +122,11 @@ export default function EditableImage({
                                             ? "0 0 0 auto"
                                             : "0",
                             }}
-                            title="Click to change image"
+                            title={
+                                isPrint
+                                    ? ""
+                                    : "Click to change image"
+                            }
                         />
 
                     ) : (
@@ -149,6 +157,7 @@ export default function EditableImage({
                     type="file"
                     accept="image/*"
                     hidden
+                    disabled={isPrint}
                     onChange={handleSelect}
                 />
 

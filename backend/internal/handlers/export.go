@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"fmt"
 
 	"github.com/bhavyaa1801/submitify-v2/internal/models"
 )
@@ -25,18 +24,17 @@ func (h *Handler) ExportPDF(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pdf, err := h.exportService.ExportPDF(document)
-	fmt.Printf("%+v\n", document)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/pdf")
-	w.Header().Set("Content-Disposition", `attachment; filename="submitify.pdf"`)
+	w.WriteHeader(http.StatusOK)
 
 	_, err = w.Write(pdf)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
 	}
+
 }

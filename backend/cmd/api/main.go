@@ -6,13 +6,11 @@ import (
 
 	"github.com/bhavyaa1801/submitify-v2/internal/builder"
 	"github.com/bhavyaa1801/submitify-v2/internal/config"
-	"github.com/bhavyaa1801/submitify-v2/internal/expoter/pdf"
 	"github.com/bhavyaa1801/submitify-v2/internal/handlers"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/generator"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/groq"
 	"github.com/bhavyaa1801/submitify-v2/internal/middleware"
 	"github.com/bhavyaa1801/submitify-v2/internal/parser/question"
-	"github.com/bhavyaa1801/submitify-v2/internal/renderer"
 	"github.com/bhavyaa1801/submitify-v2/internal/service"
 )
 
@@ -29,10 +27,6 @@ func main() {
 
 	docBuilder := builder.New()
 
-	r := renderer.New(cfg.ServerURL)
-
-	exporter := pdf.New("wkhtmltopdf")
-
 	parser := question.New(gen)
 
 	parseService := service.NewParseService(
@@ -44,11 +38,8 @@ func main() {
 		docBuilder,
 	)
 
-	exportService := service.NewExportService(
-		r,
-		exporter,
-	)
-
+    exportService := service.NewExportService()
+	
 	handler := handlers.New(
 		parseService,
 		generateService,

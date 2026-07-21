@@ -50,10 +50,6 @@ var SQLProfile = ProfileDefinition{
 
 	Sections: []SectionDefinition{
 		{
-			Title: "Aim",
-			Type:  Paragraph,
-		},
-		{
 			Title: "Theory",
 			Type:  Paragraph,
 		},

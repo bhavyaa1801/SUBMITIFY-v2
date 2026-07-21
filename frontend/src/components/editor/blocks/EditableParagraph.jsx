@@ -2,6 +2,8 @@ import "./Editpara.css";
 import { useEffect, useRef } from "react";
 
 import { useDocument } from "../context/DocumentContext";
+import { useEditorMode } from "../context/EditorModeContext";
+
 
 export default function EditableParagraph({
     value,
@@ -16,6 +18,7 @@ export default function EditableParagraph({
 }) {
 
     const ref = useRef(null);
+    const { isPrint } = useEditorMode();
 
     const Component = tag;
 
@@ -36,6 +39,8 @@ export default function EditableParagraph({
 
     const handleBlur = (e) => {
 
+        if (isPrint) return;
+
         onChange?.(
             e.currentTarget.innerText
         );
@@ -43,6 +48,8 @@ export default function EditableParagraph({
     };
 
     const handleFocus = () => {
+
+        if (isPrint) return;
 
         setActiveSection({
             experimentIndex,
@@ -58,7 +65,7 @@ export default function EditableParagraph({
         <Component
             ref={ref}
             className={className}
-            contentEditable
+            contentEditable={!isPrint}
             suppressContentEditableWarning
             spellCheck={false}
             onFocus={handleFocus}
@@ -80,7 +87,7 @@ export default function EditableParagraph({
                 textDecoration:
                     style.underline
                         ? "underline"
-                        : "none",
+                        : defaultStyle.textDecoration || "none",
 
                 textAlign:
                     style.align ||

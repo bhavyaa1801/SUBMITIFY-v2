@@ -1,0 +1,177 @@
+/* ==========================================
+   Print Mode
+   ========================================== */
+
+.document-workspace.document-print {
+
+    background: white;
+
+    padding: 0;
+
+    min-height: auto;
+
+    overflow: visible;
+
+}
+
+.document-print .document-editor {
+
+    transform: none;
+
+    width: auto;
+
+    margin: 0;
+
+    display: block;
+
+}
+.document-print .section-editor{
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    border: none !important;
+
+    background: transparent !important;
+
+}
+
+/* ==========================================
+   Pages
+   ========================================== */
+.document-print {
+
+    background: white !important;
+
+}
+.document-print .page {
+
+    margin: 0 auto;
+
+    box-shadow: none;
+
+    border: none;
+
+    overflow: visible;
+
+    page-break-after: always;
+
+    break-after: page;
+
+}
+
+.document-print .page:last-child {
+
+    page-break-after: auto;
+
+    break-after: auto;
+
+}
+
+.document-print .page::before {
+
+    display: none;
+
+}
+
+
+/* ==========================================
+   Remove Editor UI
+   ========================================== */
+
+.document-print .section-editor,
+.document-print .active-section {
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    border: none !important;
+
+    outline: none !important;
+
+    box-shadow: none !important;
+
+    background: transparent !important;
+
+}
+
+.document-print .section-menu,
+.document-print .section-menu-button {
+
+    display: none !important;
+
+}
+
+
+/* ==========================================
+   Images
+   ========================================== */
+
+.document-print img {
+
+    max-width: 100%;
+
+    height: auto;
+
+}
+
+
+/* ==========================================
+   Code
+   ========================================== */
+
+.document-print pre {
+
+    white-space: pre-wrap;
+
+    overflow-wrap: break-word;
+
+    margin: 0;
+
+}
+
+
+/* ==========================================
+   Page Break Behaviour
+   ========================================== */
+
+/* Keep headings with their content */
+
+.document-print .experiment-question,
+.document-print .paragraph-title {
+
+    break-after: avoid;
+
+    page-break-after: avoid;
+
+}
+
+/* Images should never split */
+
+.document-print .image-block {
+
+    break-inside: avoid;
+
+    page-break-inside: avoid;
+
+}
+
+/* Tables */
+
+.document-print table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+.document-print tr {
+
+    break-inside: avoid;
+
+    page-break-inside: avoid;
+
+}

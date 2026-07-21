@@ -7,16 +7,20 @@ import InsertBlockButton from "../../InsertBlockButton";
 import { useDocument } from "../context/DocumentContext";
 import { Theme } from "../theme/theme";
 import { createSection } from "../utils/createSection";
+import { useEditorMode } from "../context/EditorModeContext";
 
 export default function ExperimentPage({
     experiment,
     experimentIndex,
+    continuation = false,
 }) {
 
     const {
         insertSection,
         updateExperiment,
     } = useDocument();
+
+    const { isPrint } = useEditorMode();
 
     return (
 
@@ -25,52 +29,61 @@ export default function ExperimentPage({
             style={Theme.document}
         >
 
-            <EditableParagraph
-                tag="h1"
-                className="experiment-title"
-                value={`Experiment ${experiment.number}`}
-                defaultStyle={Theme.experiment.title}
-                onChange={(value) => {
+            {!continuation && (
 
-                    const match = value.match(/\d+/);
+                <>
+                 <div data-measure="experiment-title">
+                    <EditableParagraph
+                        tag="h1"
+                        className="experiment-title"
+                        value={`Experiment ${experiment.number}`}
+                        defaultStyle={Theme.experiment.title}
+                        onChange={(value) => {
 
-                    updateExperiment(
-                        experimentIndex,
-                        {
-                            number: match
-                                ? Number(match[0])
-                                : experiment.number,
-                        }
-                    );
+                            const match = value.match(/\d+/);
 
-                }}
-            />
+                            updateExperiment(
+                                experimentIndex,
+                                {
+                                    number: match
+                                        ? Number(match[0])
+                                        : experiment.number,
+                                }
+                            );
 
-            <div className="experiment-question">
+                        }}
+                    />
+                    </div>
 
-                <EditableParagraph
-                    tag="h2"
-                    className="experiment-question-title"
-                    value="AIM"
-                    defaultStyle={Theme.experiment.aimHeading}
-                    onChange={() => {}}
-                />
+                    <div className="experiment-question"  data-measure="experiment-aim">
 
-                <EditableParagraph
-                    tag="p"
-                    value={experiment.question}
-                    defaultStyle={Theme.experiment.question}
-                    onChange={(value) =>
-                        updateExperiment(
-                            experimentIndex,
-                            {
-                                question: value,
+                        <EditableParagraph
+                            tag="h2"
+                            className="experiment-question-title"
+                            value="AIM"
+                            defaultStyle={Theme.experiment.aimHeading}
+                            onChange={() => { }}
+                        />
+
+                        <EditableParagraph
+                            tag="p"
+                            value={experiment.question}
+                            defaultStyle={Theme.experiment.question}
+                            onChange={(value) =>
+                                updateExperiment(
+                                    experimentIndex,
+                                    {
+                                        question: value,
+                                    }
+                                )
                             }
-                        )
-                    }
-                />
+                        />
 
-            </div>
+                    </div>
+
+                </>
+
+            )}
 
             {experiment.sections.map((section, index) => (
 
@@ -82,42 +95,46 @@ export default function ExperimentPage({
                         sectionIndex={index}
                     />
 
-                    <InsertBlockButton
+                    {!isPrint && (
 
-                        onInsertParagraph={() =>
-                            insertSection(
-                                experimentIndex,
-                                index,
-                                createSection(
-                                    "paragraph",
-                                    "Text"
+                        <InsertBlockButton
+
+                            onInsertParagraph={() =>
+                                insertSection(
+                                    experimentIndex,
+                                    index,
+                                    createSection(
+                                        "paragraph",
+                                        "Text"
+                                    )
                                 )
-                            )
-                        }
+                            }
 
-                        onInsertCode={() =>
-                            insertSection(
-                                experimentIndex,
-                                index,
-                                createSection(
-                                    "code",
-                                    "Source Code"
+                            onInsertCode={() =>
+                                insertSection(
+                                    experimentIndex,
+                                    index,
+                                    createSection(
+                                        "code",
+                                        "Source Code"
+                                    )
                                 )
-                            )
-                        }
+                            }
 
-                        onInsertImage={() =>
-                            insertSection(
-                                experimentIndex,
-                                index,
-                                createSection(
-                                    "image",
-                                    "Image"
+                            onInsertImage={() =>
+                                insertSection(
+                                    experimentIndex,
+                                    index,
+                                    createSection(
+                                        "image",
+                                        "Image"
+                                    )
                                 )
-                            )
-                        }
+                            }
 
-                    />
+                        />
+
+                    )}
 
                 </div>
 
