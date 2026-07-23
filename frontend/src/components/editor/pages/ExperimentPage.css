@@ -9,14 +9,14 @@
     text-align:center;
 
     margin-bottom:25px;
-    margin-top: 20px;
+    margin-top: 0;
 
 }
 
 .experiment-question{
 
     margin-bottom:20px;
-
+    margin-top: 4px;
 }
 
 .experiment-question strong{

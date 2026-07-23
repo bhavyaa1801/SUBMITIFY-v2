@@ -3,7 +3,10 @@
    ========================================== */
 @page {
   size: A4;
-  margin: 15mm;
+  margin-top: 15mm;
+  margin-right: 15mm;
+  margin-bottom: 15mm;
+  margin-left: 15mm; 
 }
 
 /* ==========================================
@@ -50,6 +53,15 @@
 
 .document-print .page {
   outline: none;
+  padding: 0;
+  width: auto;
+  break-after: page;
+  page-break-after: always;
+}
+
+.document-print .page:last-of-type {
+  break-after: auto;
+  page-break-after: auto;
 }
 
 /* ==========================================
