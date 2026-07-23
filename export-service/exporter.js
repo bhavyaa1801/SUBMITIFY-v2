@@ -12,8 +12,8 @@ export async function exportDocument(document) {
     const page = await browser.newPage({
 
         viewport: {
-            width: 1400,
-            height: 1000,
+            width: 794,
+            height: 1123,
         },
 
     });
@@ -59,22 +59,14 @@ export async function exportDocument(document) {
 
         console.log("Generating PDF...");
 
+
+
+        await page.emulateMedia({ media: "print" });
+
         const pdf = await page.pdf({
-
-            format: "A4",
-
-            printBackground: true,
-
-            margin: {
-
-                top: "0mm",
-                right: "0mm",
-                bottom: "0mm",
-                left: "0mm",
-
-            },
-
-        });
+  preferCSSPageSize: true,
+  printBackground: true,
+});
 
         const finalPdf = await addPageBorders(pdf);
 

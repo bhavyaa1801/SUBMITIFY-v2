@@ -95,19 +95,19 @@ export default function EditableCode({
     // PRINT MODE
     // ============================
 
+    // PRINT MODE
     if (isPrint) {
+        const lines = (value ?? "").split("\n");
 
         return (
-
-            <pre
-                className="code-block code-block-print"
-                style={commonStyle}
-            >
-                {value ?? ""}
+            <pre className="code-block code-block-print" style={commonStyle}>
+                {lines.map((line, i) => (
+                    <div className="code-line" key={i}>
+                        {line.length ? line : "\u00A0" /* keep blank lines visible */}
+                    </div>
+                ))}
             </pre>
-
         );
-
     }
 
     // ============================

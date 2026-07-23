@@ -1,83 +1,47 @@
 import { useEffect, useState } from "react";
-
 import DocumentEditor from "../components/editor/DocumentEditor/DocumentEditor";
 
 export default function PrintDocumentPage() {
+  const [document, setDocument] = useState(window.__SUBMITIFY_DOCUMENT__ || null);
 
-    const [document, setDocument] = useState(
-        window.__SUBMITIFY_DOCUMENT__ || null
-    );
+  useEffect(() => {
+    const root = window.document.getElementById("root");
+    const html = window.document.documentElement;
+    const body = window.document.body;
+    html.style.background = "#fff";
+    body.style.background = "#fff";
+    if (root) root.style.background = "#fff";
+    return () => {
+      html.style.background = "";
+      body.style.background = "";
+      if (root) root.style.background = "";
+    };
+  }, []);
 
-    useEffect(() => {
+  useEffect(() => {
+    const handleDocumentReady = () => setDocument(window.__SUBMITIFY_DOCUMENT__);
+    window.addEventListener("submitify-document-ready", handleDocumentReady);
 
-        console.log("Mounted Print Page");
+    // signal ready as soon as document is set and React has painted —
+    // no Paged.js step to wait for anymore
+    return () => window.removeEventListener("submitify-document-ready", handleDocumentReady);
+  }, []);
 
-        const handleDocumentReady = () => {
+  useEffect(() => {
+    if (!document) return;
+    requestAnimationFrame(() => {
+      window.__SUBMITIFY_READY__ = true;
+    });
+  }, [document]);
 
-            console.log("EVENT RECEIVED");
+  if (!document) return <div>Loading document...</div>;
 
-            console.log(window.__SUBMITIFY_DOCUMENT__);
-
-            setDocument(window.__SUBMITIFY_DOCUMENT__);
-
-        };
-
-        window.addEventListener(
-            "submitify-document-ready",
-            handleDocumentReady
-        );
-
-        return () => {
-
-            window.removeEventListener(
-                "submitify-document-ready",
-                handleDocumentReady
-            );
-
-        };
-
-    }, []);
-    useEffect(() => {
-
-        console.log("Document changed", document);
-
-        if (!document) return;
-
-        console.log("READY");
-
-        window.__SUBMITIFY_READY__ = true;
-
-    }, [document]);
-
-    if (!document) {
-
-        return (
-
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100vh",
-                    fontFamily: "sans-serif",
-                }}
-            >
-                Loading document...
-            </div>
-
-        );
-
-    }
-
-    return (
-
-        <DocumentEditor
-            document={document}
-            setDocument={() => { }}
-            onExport={() => { }}
-            mode="print"
-        />
-
-    );
-
+  return (
+    <DocumentEditor
+      document={document}
+      setDocument={() => {}}
+      onExport={() => {}}
+      mode="print"
+    />
+  );
 }

@@ -13,6 +13,13 @@
 
 }
 
+.document-print {
+  background: #fff !important;
+  width: 210mm;
+  margin: 0 auto;
+  padding: 0;
+}
+
 .document-editor {
 
     width: fit-content;

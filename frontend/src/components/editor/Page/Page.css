@@ -62,29 +62,13 @@
 /* Print */
 
 @media print {
-
-    .page {
-
-        width: 210mm;
-        min-height: 297mm;
-
-        margin: 0;
-        padding: 15mm;
-
-        box-shadow: none;
-
-        overflow: visible;
-
-        break-after: page;
-        page-break-after: always;
-
-    }
-
-    .page:last-child {
-
-        break-after: auto;
-        page-break-after: auto;
-
-    }
-
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0;
+    padding: 15mm;
+    box-shadow: none;
+    overflow: visible;
+    /* delete break-after / page-break-after — Paged.js owns pagination now */
+  }
 }
