@@ -47,6 +47,11 @@
   display: none !important;
 }
 
+
+.document-print .page {
+  outline: none;
+}
+
 /* ==========================================
    Page Break Behaviour — headings/blocks
    ========================================== */

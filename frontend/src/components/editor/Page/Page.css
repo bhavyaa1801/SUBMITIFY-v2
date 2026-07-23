@@ -18,24 +18,10 @@
         0 4px 12px rgba(0,0,0,.08),
         0 2px 6px rgba(0,0,0,.05);
 
-}
-
-/* Page Border */
-
-.page::before {
-
-    content: "";
-
-    position: absolute;
-
-    top: 10mm;
-    left: 10mm;
-    right: 10mm;
-    bottom: 10mm;
-
-    border: 1.2px solid #111;
-
-    pointer-events: none;
+    /* Page border — outline, not border, so it never participates in
+       print/PDF fragmentation and can be cleanly turned off for export */
+    outline: 1.2px solid #111;
+    outline-offset: -10mm;
 
 }
 
@@ -69,6 +55,5 @@
     padding: 15mm;
     box-shadow: none;
     overflow: visible;
-    /* delete break-after / page-break-after — Paged.js owns pagination now */
   }
 }
