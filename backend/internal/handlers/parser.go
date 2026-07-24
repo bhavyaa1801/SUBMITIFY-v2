@@ -23,7 +23,10 @@ func (h *Handler) Parse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	questions, err := h.parseService.Parse(req.RawQuestions)
+	questions, err := h.parseService.Parse(
+		r.Context(),
+		req.RawQuestions,
+	)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

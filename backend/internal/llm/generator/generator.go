@@ -8,6 +8,8 @@ import (
 	"github.com/bhavyaa1801/submitify-v2/internal/llm"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/promt"
 	"github.com/bhavyaa1801/submitify-v2/internal/models"
+	"github.com/bhavyaa1801/submitify-v2/internal/validator"
+	"context"
 )
 
 type Generator struct {
@@ -19,12 +21,12 @@ func New(client llm.Client) *Generator {
 		llm: client,
 	}
 }
-
 func (g *Generator) Generate(
+	ctx context.Context,
 	number int,
 	question string,
 	profile models.ProfileDefinition,
-) (builder.QuestionContent, error) {
+)(builder.QuestionContent, error) {
 
 	p, err := prompt.BuildGeneratorPrompt(prompt.GeneratorPrompt{
 		Question: question,
@@ -34,18 +36,17 @@ func (g *Generator) Generate(
 		return builder.QuestionContent{}, err
 	}
 
-	response, err := g.llm.Generate(p)
-	// fmt.Println("========== RAW AI RESPONSE ==========")
-	// fmt.Println(response)
-	// fmt.Println("=====================================")
+	response, err := g.llm.Generate(ctx,p,)
+	fmt.Println("========== RAW AI RESPONSE ==========")
+	fmt.Println(response)
+	fmt.Println("=====================================")
 
-	// fmt.Println("PROFILE:", profile.Name)
+	fmt.Println("PROFILE:", profile.Name)
 
-	// for _, s := range profile.Sections {
-	// 	fmt.Println("SECTION:", s.Title)
-	// }
+	for _, s := range profile.Sections {
+		fmt.Println("SECTION:", s.Title)
+	}
 
-	
 	if err != nil {
 		return builder.QuestionContent{}, err
 	}
@@ -57,6 +58,13 @@ func (g *Generator) Generate(
 			"invalid JSON returned by AI: %w",
 			err,
 		)
+	}
+
+	if err := validator.ValidateSections(
+		sections,
+		profile,
+	); err != nil {
+		return builder.QuestionContent{}, err
 	}
 
 	return builder.QuestionContent{
