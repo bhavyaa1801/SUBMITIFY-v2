@@ -1,0 +1,171 @@
+.insert-block {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: 8px 0;
+  
+
+}
+
+.line {
+
+    flex: 1;
+
+    height: 1px;
+
+    background: #a6a2a2;
+
+}
+
+.plus-button {
+
+    width: 34px;
+
+    height: 34px;
+
+    margin: 0 12px;
+
+    border-radius: 50%;
+
+    border: 1px solid #d0d0d0;
+
+    background: rgb(228, 225, 225);
+
+    cursor: pointer;
+
+    font-size: 22px;
+
+    transition:
+
+        transform .25s ease,
+
+        background .20s ease,
+
+        box-shadow .2s ease;
+
+}
+
+.plus-button:hover{
+
+    background:#fafafa;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.12);
+
+}
+
+.plus-button.open{
+
+    transform:rotate(45deg);
+
+}
+
+.insert-popup {
+
+    position: absolute;
+
+    bottom: 45px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-width: 180px;
+
+    padding: 10px;
+
+    background: white;
+
+    border: 1px solid #ddd;
+
+    border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.15);
+
+    animation: popup .2s ease;
+
+    z-index: 100;
+
+}
+
+.insert-popup button {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: rgb(227, 225, 225);
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    text-align: left;
+
+    transition: background .2s;
+
+}
+
+.insert-popup button:hover {
+
+    background: #8c8a8a;
+
+}
+
+@keyframes popup {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(-8px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}
+
+.insert-wrapper{
+
+    display:flex;
+
+    align-items:center;
+
+    width:100%;
+
+    opacity:0;
+
+    transition:.7s ease;
+
+}
+.insert-wrapper.visible{
+
+    opacity:3;
+
+}

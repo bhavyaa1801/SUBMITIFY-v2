@@ -1,0 +1,49 @@
+.document-workspace {
+
+    background: #ececec;
+    display:flex;
+
+    justify-content:center;
+
+    align-items:flex-start;
+    min-height: calc(100vh - 70px);
+
+    padding: 40px 0 80px;
+    overflow:auto;
+
+}
+
+.document-print {
+  background: #fff !important;
+  width: 210mm;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.document-editor {
+
+    width: fit-content;
+
+    margin: auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+}
+
+@media screen {
+
+    .document-editor{
+
+        --zoom:.64;
+
+        transform:scale(var(--zoom));
+
+        transform-origin:top center;
+
+    }
+
+}

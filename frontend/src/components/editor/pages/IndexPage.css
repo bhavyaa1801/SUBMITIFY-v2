@@ -1,0 +1,50 @@
+.index-page {
+    width: 100%;
+}
+
+.index-heading {
+    text-align: center;
+    font-size: 1.6rem;      /* browser default for <h2> */
+    font-weight: bold;
+    margin: 0 0 5px 0;
+}
+
+.index-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 20px;
+}
+
+.index-table th,
+.index-table td {
+    border: 1px solid black;
+    padding: 4px;
+    vertical-align: middle;
+}
+
+.index-table th {
+    font-weight: bold;
+    text-align: left;
+}
+
+.index-table th:nth-child(1),
+.index-table td:nth-child(1) {
+    width: 10%;
+    text-align: center;
+}
+
+.index-table th:nth-child(2),
+.index-table td:nth-child(2) {
+    width: 60%;
+}
+
+.index-table th:nth-child(3),
+.index-table td:nth-child(3) {
+    width: 15%;
+}
+
+.index-table th:nth-child(4),
+.index-table td:nth-child(4) {
+    width: 15%;
+}

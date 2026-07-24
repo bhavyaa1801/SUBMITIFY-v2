@@ -1,0 +1,59 @@
+.page {
+
+    width: 210mm;
+    min-height: 297mm;
+
+    background: white;
+    color: #000;
+
+    position: relative;
+    box-sizing: border-box;
+
+    margin: 20px auto;
+    padding: 15mm;
+
+    overflow: visible;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.08),
+        0 2px 6px rgba(0,0,0,.05);
+
+    /* Page border — outline, not border, so it never participates in
+       print/PDF fragmentation and can be cleanly turned off for export */
+    outline: 1.2px solid #111;
+    outline-offset: -10mm;
+
+}
+
+/* Mobile */
+
+@media (max-width: 900px) {
+
+    .page {
+
+        width: 100%;
+
+        min-height: auto;
+
+        margin: 12px;
+
+        padding: 20px;
+
+        box-shadow: none;
+
+    }
+
+}
+
+/* Print */
+
+@media print {
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0;
+    padding: 15mm;
+    box-shadow: none;
+    overflow: visible;
+  }
+}

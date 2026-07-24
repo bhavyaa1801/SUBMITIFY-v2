@@ -1,0 +1,116 @@
+/* ==========================================
+   Page geometry — single source of truth
+   ========================================== */
+@page {
+  size: A4;
+  margin-top: 15mm;
+  margin-right: 15mm;
+  margin-bottom: 15mm;
+  margin-left: 15mm; 
+}
+
+/* ==========================================
+   Print Mode — workspace/container resets
+   ========================================== */
+.document-workspace.document-print {
+  background: white;
+  padding: 0;
+  min-height: auto;
+  overflow: visible;
+}
+
+.document-print .document-editor {
+  transform: none;
+  width: auto;
+  margin: 0;
+  display: block;
+}
+
+.document-print {
+  background: white !important;
+}
+
+
+
+/* ==========================================
+   Remove Editor UI
+   ========================================== */
+.document-print .section-editor,
+.document-print .active-section {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.document-print .section-menu,
+.document-print .section-menu-button {
+  display: none !important;
+}
+
+
+.document-print .page {
+  outline: none;
+  padding: 0;
+  width: auto;
+  break-after: page;
+  page-break-after: always;
+}
+
+.document-print .page:last-of-type {
+  break-after: auto;
+  page-break-after: auto;
+}
+
+/* ==========================================
+   Page Break Behaviour — headings/blocks
+   ========================================== */
+.document-print .experiment-title,
+.document-print .experiment-question,
+.document-print .paragraph-title {
+  break-after: avoid;
+  page-break-after: avoid;
+  break-inside: avoid;
+}
+
+.document-print .image-block {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* ==========================================
+   Code — this is what lets code split across pages
+   ========================================== */
+.document-print pre {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  margin: 0;
+}
+
+.document-print .code-block-print {
+  break-inside: auto;
+}
+
+.document-print .code-line {
+  break-inside: avoid;
+}
+
+/* ==========================================
+   Tables
+   ========================================== */
+.document-print table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.document-print tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.document-print img {
+  max-width: 100%;
+  height: auto;
+}

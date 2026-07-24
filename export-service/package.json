@@ -1,0 +1,19 @@
+{
+  "name": "submitify-export-service",
+  "version": "1.0.0",
+  "description": "Submitify Export Service",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.61.1"
+  }
+}
