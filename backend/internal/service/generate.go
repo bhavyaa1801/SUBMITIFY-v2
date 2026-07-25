@@ -36,6 +36,9 @@ func (s *GenerateService) Generate(
 	req api.GenerateRequest,
 ) (models.Document, error) {
 
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	profile := models.GetProfileDefinition(req.Profile)
 
 	jobs := make(chan generationJob)
@@ -87,12 +90,16 @@ func (s *GenerateService) Generate(
 
 	for result := range results {
 
-		if result.Err != nil {
-			return models.Document{}, result.Err
-		}
+	if result.Err != nil {
 
-		contents = append(contents, result.Content)
+		// Stop every other worker
+		cancel()
+
+		return models.Document{}, result.Err
 	}
+
+	contents = append(contents, result.Content)
+}
 
 	// Preserve original order
 	sort.Slice(contents, func(i, j int) bool {
