@@ -12,12 +12,9 @@ export default function HelpButton({
             title="Open Editor Guide"
         >
 
-            <span className="help-icon">
-                💡
-            </span>
 
             <span className="help-text">
-                Help
+                💡Need Help ?
             </span>
 
         </button>

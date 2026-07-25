@@ -18,7 +18,7 @@ export default function GuideModal({
 
                     <div>
 
-                        <h2> Welcome to Submitify Editor</h2>
+                        <h2> Welcome to the NEW Submitify Editor</h2>
 
                         <p>
                             Review and customize your practical file before exporting.
