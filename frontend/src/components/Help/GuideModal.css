@@ -1,0 +1,377 @@
+.guide-overlay {
+
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(8px);
+
+    z-index: 9999;
+
+    animation: fadeIn .25s ease;
+
+}
+
+.guide-modal {
+
+    width: 680px;
+    max-width: 90vw;
+    max-height: 85vh;
+
+    overflow-y: auto;
+
+    background: #ffffff;
+
+    border-radius: 24px;
+
+    padding: 32px;
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,.18);
+
+    animation: pop .28s ease;
+
+}
+
+.guide-modal::-webkit-scrollbar {
+
+    width: 8px;
+
+}
+
+.guide-modal::-webkit-scrollbar-thumb {
+
+    background: #d1d5db;
+
+    border-radius: 10px;
+
+}
+
+.guide-modal-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 20px;
+
+    margin-bottom: 28px;
+
+}
+
+.guide-modal-header h2 {
+
+    margin: 0;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    color: #111827;
+    align-content: center;
+
+
+}
+
+.guide-modal-header p {
+
+    margin-top: 10px;
+
+    color: #6b7280;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+}
+
+.guide-close-btn {
+
+    width: 40px;
+
+    height: 40px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #5c8ff4;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    transition: .2s;
+
+}
+
+.guide-close-btn:hover {
+
+    background: #4f46e5;
+
+    color: white;
+
+}
+
+.guide-section {
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin-bottom: 18px;
+
+}
+
+.guide-section h3 {
+
+    margin: 0 0 16px;
+
+    font-size: 16px;
+
+    color: #111827;
+
+}
+
+.guide-section ul {
+
+    margin: 0;
+
+    padding-left: 20px;
+
+}
+
+.guide-section li {
+
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1;
+
+    color: #374151;
+
+}
+
+
+.guide-section p {
+
+    margin: 10px 0;
+
+    color: #4b5563;
+    font-size: 13px;
+    line-height: 1;
+
+}
+
+.guide-footer {
+
+    margin-top: 28px;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 14px;
+
+}
+
+.guide-primary-btn {
+
+    height: 46px;
+
+    min-width: 130px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #4f46e5;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+.guide-primary-btn:hover {
+
+    background: #4338ca;
+
+}
+
+.guide-secondary-btn {
+
+    height: 46px;
+
+    min-width: 130px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 12px;
+
+    background: white;
+
+    color: #374151;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+.guide-secondary-btn:hover {
+
+    background: #f3f4f6;
+
+}
+
+@keyframes fadeIn {
+
+    from {
+
+        opacity: 0;
+
+    }
+
+    to {
+
+        opacity: 1;
+
+    }
+
+}
+
+@keyframes pop {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(12px) scale(.96);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0) scale(1);
+
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .guide-modal {
+
+        width: 95vw;
+
+        padding: 24px;
+
+    }
+
+    .guide-footer {
+
+        flex-direction: column-reverse;
+
+    }
+
+    .guide-primary-btn,
+    .guide-secondary-btn {
+
+        width: 100%;
+
+    }
+
+}
+.help-button{
+
+    position:fixed;
+
+    bottom:28px;
+
+    right:28px;
+
+    height:54px;
+
+    padding:0 18px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:#4f46e5;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 12px 30px rgba(79,70,229,.35);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+
+    z-index:999;
+}
+
+.help-button:hover{
+
+    transform:translateY(-2px);
+
+    background:#4338ca;
+
+    box-shadow:
+        0 16px 36px rgba(79,70,229,.45);
+
+}
+
+.help-button:active{
+
+    transform:scale(.98);
+
+}
+
+.help-icon{
+
+    font-size:20px;
+
+}
+
+.help-text{
+
+    white-space:nowrap;
+
+}
