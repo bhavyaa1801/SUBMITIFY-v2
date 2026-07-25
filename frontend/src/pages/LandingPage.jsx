@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import FloatingCode from "../components/FloatingCode";
 import CursorEffect from "../components/CursorEffect";
 import AppMockup from "../components/AppMockup";
+import LearnMoreModal from "../components/Help/LearnMoreModal";
 
 const FEATURES = [
   "AI Parsing",
@@ -13,6 +14,7 @@ const FEATURES = [
   "Structured Sections",
   "No Login",
 ];
+
 
 const HOW_STEPS = [
   {
@@ -69,6 +71,7 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [showSample, setShowSample] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const SAMPLE_PDF_URL = "/sample.pdf";
 
   useEffect(() => {
@@ -148,8 +151,20 @@ export default function LandingPage() {
               >
                 View Sample PDF
               </button>
+
+              <button
+                className="btn-ghost-lg"
+                onClick={() => setShowGuide(true)}
+              >
+                Explore Features
+              </button>
+
             </div>
           </div>
+          <LearnMoreModal
+            isOpen={showGuide}
+            onClose={() => setShowGuide(false)}
+          />
 
           {!isMobile && (
             <div
@@ -235,7 +250,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-     
+
       {/* CTA */}
 
       <section className="lp-cta-banner">
