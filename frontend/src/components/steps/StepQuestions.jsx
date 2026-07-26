@@ -33,7 +33,8 @@ export default function StepQuestions({
             </h2>
 
             <p className="step-sub">
-                Paste the questions as provided by your faculty - make sure to mark ques properly
+                Paste the questions as provided by your faculty - make sure to mark ques properly                               
+                IN THE FORMAT - [ 1. 2. 3. and so on]
             </p>
 
             <div

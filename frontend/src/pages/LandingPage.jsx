@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import FloatingCode from "../components/FloatingCode";
 import CursorEffect from "../components/CursorEffect";
 import AppMockup from "../components/AppMockup";
-import LearnMoreModal from "../components/Help/LearnMoreModal";
+import { useGuide } from "../context/GuideContext";
 
 const FEATURES = [
   "AI Parsing",
@@ -20,50 +20,60 @@ const HOW_STEPS = [
   {
     num: "01",
     title: "Project Information",
-    desc: "Enter your subject, course, university and other metadata.",
+    desc:
+      "Enter your subject, course, semester and other document details.",
   },
   {
     num: "02",
-    title: "Paste Question Sheet",
-    desc: "Paste your assignment, practical or question paper exactly as provided.",
+    title: "Parse & Review Questions",
+    desc:
+      "Paste your question sheet. Submitify parses individual questions, and you can review, edit or add questions before generation.",
   },
   {
     num: "03",
-    title: "Review Your Input",
-    desc: "check details & Edit, delete or add questions before generation.",
+    title: "AI Generation",
+    desc:
+      "Each experiment is generated independently using parallel workers for faster and more reliable results.",
   },
   {
     num: "04",
-    title: "Generate & Export",
-    desc: "AI builds a structured academic document that you can edit and export.",
+    title: "Live Document Editor",
+    desc:
+      "Edit headings, paragraphs, code blocks and images before exporting your document.",
+  },
+  {
+    num: "05",
+    title: "Professional PDF Export",
+    desc:
+      "Export a polished, print-ready academic document powered by Playwright.",
   },
 ];
 
 const FEATURE_CARDS = [
   {
-    icon: "🤖",
-    title: "AI Question Parsing",
-    desc: "Automatically extracts individual questions from messy question sheets.",
-  },
-  {
-    icon: "✍️",
-    title: "Editable Documents",
-    desc: "Every generated section remains editable before exporting.",
-  },
-  {
-    icon: "📑",
-    title: "Structured Documents",
-    desc: "Paragraphs, code, tables, equations and lists generated automatically.",
+    icon: "📝",
+    title: "Live Document Editor",
+    desc: "Edit headings, paragraphs, code blocks and images before exporting your document.",
   },
   {
     icon: "⚡",
-    title: "Powered by Groq",
-    desc: "Lightning-fast AI generation using Groq inference.",
+    title: "Parallel AI Generation",
+    desc: "Experiments are generated independently using a worker pool for faster and more reliable results.",
+  },
+  {
+    icon: "🖼️",
+    title: "Image Support",
+    desc: "Insert screenshots anywhere in your document and resize them directly inside the editor.",
   },
   {
     icon: "📄",
-    title: "One-click PDF",
-    desc: "Export professional academic documents in a single click.",
+    title: "Professional PDF Export",
+    desc: "Export polished, print-ready academic documents powered by Playwright.",
+  },
+  {
+    icon: "🛡️",
+    title: "Reliable AI Pipeline",
+    desc: "Automatic retries and intelligent parsing ensure consistent document generation.",
   },
 ];
 
@@ -71,8 +81,9 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [showSample, setShowSample] = useState(false);
-  const [showGuide, setShowGuide] = useState(false);
-  const SAMPLE_PDF_URL = "/sample.pdf";
+  const { openGuide } = useGuide();
+  
+  const SAMPLE_PDF_URL = "/SAMPLE.pdf";
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
@@ -154,17 +165,13 @@ export default function LandingPage() {
 
               <button
                 className="btn-ghost-lg"
-                onClick={() => setShowGuide(true)}
+                onClick={() => openGuide("features")}
               >
                 Explore Features
               </button>
 
             </div>
           </div>
-          <LearnMoreModal
-            isOpen={showGuide}
-            onClose={() => setShowGuide(false)}
-          />
 
           {!isMobile && (
             <div

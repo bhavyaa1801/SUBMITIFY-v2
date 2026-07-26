@@ -1,10 +1,12 @@
 import "./GuideModal.css";
+import { useGuide } from "../../context/GuideContext";
 
 export default function GuideModal({
     open,
     onClose,
     onLearnMore,
 }) {
+    const { openGuide } = useGuide();
 
     if (!open) return null;
 
@@ -18,10 +20,10 @@ export default function GuideModal({
 
                     <div>
 
-                        <h2> Welcome to the NEW Submitify Editor</h2>
+                        <h2> Welcome to the Submitify Editor</h2>
 
                         <p>
-                            Review and customize your practical file before exporting.
+                            Edit and export professional academic documents with confidence.
                         </p>
 
                     </div>
@@ -45,7 +47,7 @@ export default function GuideModal({
 
                         <li>✅ Hover between sections to insert new content</li>
 
-                        <li>✅ Add paragraphs, code blocks, and images</li>
+                        <li>✅ Add paragraphs, code blocks, and images using +</li>
 
                         <li>✅ Resize images using the editor toolbar</li>
 
@@ -81,15 +83,13 @@ export default function GuideModal({
 
                     <p>
 
-                        AI-generated content is a starting point.
+                        AI-generated content is a strong first draft.
 
                     </p>
 
                     <p>
 
-                        Feel free to improve explanations, add screenshots,
-                        observations, and diagrams before exporting your final
-                        practical file.
+                        Review your document, add screenshots, observations and formatting before submitting your final practical file.
 
                     </p>
 
@@ -99,7 +99,10 @@ export default function GuideModal({
 
                     <button
                         className="guide-secondary-btn"
-                        onClick={onLearnMore}
+                        onClick={() => {
+                            onClose();
+                            openGuide("getting-started");
+                        }}
                     >
                         Learn More
                     </button>

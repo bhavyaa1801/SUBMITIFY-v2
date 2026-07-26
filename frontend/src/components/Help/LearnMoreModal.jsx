@@ -25,14 +25,14 @@ const tabs = [
   },
 ];
 
-export default function LearnMoreModal({ isOpen, onClose }) {
+export default function LearnMoreModal({ isOpen, onClose ,defaultTab = "getting-started",}) {
   const [activeTab, setActiveTab] = useState("getting-started");
 
   useEffect(() => {
     if (isOpen) {
-      setActiveTab("getting-started");
+      setActiveTab(defaultTab);
     }
-  }, [isOpen]);
+  }, [isOpen,defaultTab]);
 
   if (!isOpen) return null;
 

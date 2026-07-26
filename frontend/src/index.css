@@ -95,6 +95,112 @@ a:hover { color: var(--text); }
 }
 .btn-generate:hover { background: #2563eb; transform: translateY(-1px); }
 
+.btn-whats-new {
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(135deg, #d166b8, #3b82f6);
+
+  box-shadow:
+    0 0 18px rgba(59, 130, 246, 0.25),
+    0 0 40px rgba(59, 130, 246, 0.08);
+
+  transition: all 0.25s ease;
+}
+
+.btn-whats-new:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 28px rgba(59, 130, 246, 0.45),
+    0 0 60px rgba(59, 130, 246, 0.18);
+}
+
+.btn-whats-new::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -120%;
+
+  width: 55%;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.28),
+    transparent
+  );
+
+  transform: skewX(-20deg);
+
+  animation: whats-new-shine 3.5s infinite;
+}
+
+@keyframes whats-new-shine {
+
+  0% {
+    left: -120%;
+  }
+
+  30% {
+    left: 140%;
+  }
+
+  100% {
+    left: 140%;
+  }
+
+}
+.whats-new-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  position: relative;
+
+  flex-shrink: 0;
+}
+
+.whats-new-dot::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: 50%;
+
+  background: white;
+
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+
+  0% {
+    transform: scale(1);
+    opacity: .8;
+  }
+
+  70% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+
+}
 /* ========== LANDING PAGE ========== */
 .lp-root {
   min-height: 100vh;
