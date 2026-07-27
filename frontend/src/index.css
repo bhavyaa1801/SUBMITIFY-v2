@@ -515,7 +515,7 @@ linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
 /* ========== STEP SHARED ========== */
 .step-container {
   width: 100%;
-  max-width: 640px;
+  max-width: 1640px;
   position: relative;
   z-index: 1;
 }
@@ -545,6 +545,38 @@ linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
 .step-actions.right { justify-content: flex-end; }
 .step-actions.between { justify-content: space-between; }
 
+
+.review-layout{
+    display: grid;
+    grid-template-columns: 37% 60%;
+    gap: 24px;
+    margin-top: 16px;
+    align-items: start;
+}
+.review-sidebar{
+    position:sticky;
+    top:20px;
+    align-self:start;
+}
+.lp-logo-icon {
+  width: 45px;
+  height: 45px;
+}
+.review-content{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+.review-row{
+    display:grid;
+    grid-template-columns:110px 1fr;
+    gap:18px;
+
+    padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,.06);
+
+    align-items:start;
+}
 /* ========== FORM ELEMENTS ========== */
 .form-section {
   background: var(--bg2);
@@ -751,7 +783,7 @@ linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
   background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 20px;
+  padding: 14px 16px;
 }
 .review-section-label {
   font-family: var(--mono);
