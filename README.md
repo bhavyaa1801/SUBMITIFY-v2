@@ -117,12 +117,6 @@ generated from exactly the same document model shown in the editor.
 
 ------------------------------------------------------------------------
 
-# Architecture
-
-![alt text](images/image.png)
-
-------------------------------------------------------------------------
-
 # Workflow
 
 ``` text
