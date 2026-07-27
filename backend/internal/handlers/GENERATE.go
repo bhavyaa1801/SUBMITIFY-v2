@@ -45,7 +45,7 @@ func (h *Handler) Generate(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("Metadata: %+v\n", req.Metadata)
 
-	document, err := h.generateService.Generate(req)
+	document, err := h.generateService.Generate(r.Context(),req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

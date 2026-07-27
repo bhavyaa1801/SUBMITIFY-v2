@@ -1,0 +1,106 @@
+.release-section {
+  margin-bottom: 32px;
+}
+
+.release-version {
+  margin-bottom: 18px;
+}
+
+.release-version h2 {
+  margin: 0;
+  color: white;
+  font-size: 1.25rem;
+}
+
+.release-version span {
+  color: #60a5fa;
+  font-size: 0.9rem;
+}
+
+.release-list {
+  display: grid;
+  gap: 12px;
+}
+
+.release-card {
+  padding: 18px;
+
+  border: 1px solid #272b36;
+  border-radius: 14px;
+
+  background: #11141d;
+
+  transition: .2s;
+}
+
+.release-card:hover {
+  border-color: #3b82f6;
+}
+
+.release-badge {
+  display: inline-block;
+
+  margin-bottom: 12px;
+
+  padding: 4px 10px;
+
+  border-radius: 999px;
+
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+}
+
+.release-badge.new {
+  background: rgba(59,130,246,.12);
+  color: #60a5fa;
+}
+
+.release-badge.improved {
+  background: rgba(34,197,94,.12);
+  color: #4ade80;
+}
+
+.release-card h3 {
+  margin: 0 0 8px;
+
+  color: white;
+
+  font-size: 1rem;
+}
+
+.release-card p {
+  margin: 0;
+
+  color: #94a3b8;
+
+  line-height: 1.4;
+}
+
+.upcoming-section h2 {
+  margin-bottom: 16px;
+
+  color: white;
+
+  font-size: 1.2rem;
+}
+
+.upcoming-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 12px;
+}
+
+.upcoming-item {
+  padding: 16px;
+
+  border: 1px dashed #3b82f6;
+
+  border-radius: 12px;
+
+  color: #cbd5e1;
+
+  background: rgba(59,130,246,.05);
+}

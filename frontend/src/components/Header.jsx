@@ -1,4 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import { useGuide } from "../context/GuideContext";
+import logo from "../assets/logo.jpeg";
 
 const NAV_LINKS = [
   { label: "How it works", href: "/#how" },
@@ -8,6 +10,7 @@ const NAV_LINKS = [
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { openGuide } = useGuide();
 
   const isCreatePage = location.pathname === "/create";
 
@@ -16,7 +19,11 @@ export default function Header() {
       {/* Logo */}
       <div className="header-left">
         <div className="lp-logo" onClick={() => navigate("/")}>
-          <span className="lp-logo-icon">📄</span>
+          <img
+            src={logo}
+            alt="Submitify"
+            className="lp-logo-icon"
+          />
           <span className="lp-logo-text">SUBMITIFY</span>
         </div>
 
@@ -46,10 +53,11 @@ export default function Header() {
           </button>
         ) : (
           <button
-            className="btn-primary"
-            onClick={() => navigate("/create")}
+            className="btn-primary btn-whats-new "
+            onClick={() => openGuide("whats-new")}
           >
-            Create Document
+            <span className="whats-new-dot"></span>
+            <span>What's New</span>
           </button>
         )}
       </div>

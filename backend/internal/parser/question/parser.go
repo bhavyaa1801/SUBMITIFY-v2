@@ -1,6 +1,7 @@
 package question
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/generator"
@@ -8,22 +9,25 @@ import (
 )
 
 type Parser struct {
-	regex     *RegexParser
+	regex      *RegexParser
 	normalizer *normalizer
-	validator *validator
-	generator *generator.Generator
+	validator  *validator
+	generator  *generator.Generator
 }
 
 func New(generator *generator.Generator) *Parser {
 	return &Parser{
-		regex:     NewRegexParser(),
+		regex:      NewRegexParser(),
 		normalizer: newNormalizer(),
-		validator: newValidator(),
-		generator: generator,
+		validator:  newValidator(),
+		generator:  generator,
 	}
 }
 
-func (p *Parser) Parse(rawQuestions string) ([]models.Question, error) {
+func (p *Parser) Parse(
+	ctx context.Context,
+	rawQuestions string,
+) ([]models.Question, error) {
 
 	// First attempt: Regex parser
 	questions, err := p.regex.Parse(rawQuestions)
@@ -31,7 +35,7 @@ func (p *Parser) Parse(rawQuestions string) ([]models.Question, error) {
 		return nil, err
 	}
 
-	// norm and Validate regex output
+	// Normalize and validate regex output
 	questions = p.normalizer.Normalize(questions)
 	result := p.validator.Validate(questions)
 
@@ -47,5 +51,8 @@ func (p *Parser) Parse(rawQuestions string) ([]models.Question, error) {
 		)
 	}
 
-	return p.generator.ParseQuestions(rawQuestions)
+	return p.generator.ParseQuestions(
+		ctx,
+		rawQuestions,
+	)
 }

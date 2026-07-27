@@ -2,15 +2,19 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/bhavyaa1801/submitify-v2/internal/builder"
+	"github.com/bhavyaa1801/submitify-v2/internal/cache"
 	"github.com/bhavyaa1801/submitify-v2/internal/config"
+	"github.com/bhavyaa1801/submitify-v2/internal/database"
 	"github.com/bhavyaa1801/submitify-v2/internal/handlers"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/generator"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/groq"
 	"github.com/bhavyaa1801/submitify-v2/internal/middleware"
 	"github.com/bhavyaa1801/submitify-v2/internal/parser/question"
+	"github.com/bhavyaa1801/submitify-v2/internal/repository"
 	"github.com/bhavyaa1801/submitify-v2/internal/service"
 )
 
@@ -21,6 +25,17 @@ func main() {
 	llm := groq.New(
 		cfg.GroqAPIKey,
 		cfg.GroqModel,
+	)
+	db, err := database.New(cfg.DatabaseURL)
+	if err != nil {
+		log.Fatalf("database connection failed: %v", err)
+	}
+	defer db.Close()
+
+	cacheRepository := repository.NewPostgresCacheRepository(db)
+
+	cacheService := cache.NewCacheService(
+		cacheRepository,
 	)
 
 	gen := generator.New(llm)
@@ -36,10 +51,11 @@ func main() {
 	generateService := service.NewGenerateService(
 		gen,
 		docBuilder,
+		cacheService,
 	)
 
-    exportService := service.NewExportService()
-	
+	exportService := service.NewExportService()
+
 	handler := handlers.New(
 		parseService,
 		generateService,
@@ -63,10 +79,15 @@ func main() {
 		http.StripPrefix(
 			"/uploads/",
 			http.FileServer(
-				http.Dir("assets/uploads"),
+				http.Dir("tmp/uploads"),
 			),
 		),
 	)
+
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("OK"))
+})
 
 	// Demo Routes
 	mux.HandleFunc("/demo", handlers.DemoDocument)
@@ -75,10 +96,15 @@ func main() {
 
 	fmt.Println("Submitify V2 running on :8080")
 
-	if err := http.ListenAndServe(
-		":8080",
-		middleware.CORS(mux),
-	); err != nil {
-		panic(err)
+	port := cfg.Port
+	if port == "" {
+		port = "8080"
 	}
+
+	fmt.Printf("Submitify V2 running on :%s\n", port)
+
+	log.Fatal(http.ListenAndServe(
+		":"+port,
+		middleware.CORS(mux),
+	))
 }

@@ -3,26 +3,22 @@ import { useState, useEffect } from "react";
 const SLIDES = [
   {
     label: "01 — Project Information",
-    img: "/screenshots/project-info.png",
+    img: "/screenshots/STEP1_V2.png",
   },
   {
     label: "02 — Paste Question Sheet",
-    img: "/screenshots/questions.png",
+    img: "/screenshots/step2_v2.png",
   },
   {
     label: "03 — Review Questions",
     img: "/screenshots/review.png",
   },
   {
-    label: "04 — AI Generation",
-    img: "/screenshots/generating.png",
+    label: "04 — Document Editor",
+    img: "/screenshots/DOCEDIT.png",
   },
   {
-    label: "05 — Document Editor",
-    img: "/screenshots/editor.png",
-  },
-  {
-    label: "06 — Export PDF",
+    label: "05 — Export PDF",
     img: "/screenshots/export.png",
   },
 ];
@@ -130,11 +126,11 @@ export default function AppMockup() {
 
         <div
           style={{
-            position: "relative",
-            width: "100%",
-            aspectRatio: "16 / 10",
-            overflow: "hidden",
-          }}
+    position: "relative",
+    width: "100%",
+    height: "390px",
+    overflow: "hidden",
+}}
         >
           {SLIDES.map((slide, index) => (
             <img

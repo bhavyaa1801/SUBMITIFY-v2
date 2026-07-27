@@ -2,6 +2,7 @@ package groq
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -26,28 +27,33 @@ func New(apiKey, model string) *Client {
 	}
 }
 
-func (c *Client) Generate(prompt string) (string, error) {
+func (c *Client) Generate(ctx context.Context, prompt string) (string, error) {
 
 	request := ChatRequest{
-	Model: c.model,
-	Messages: []Message{
-		{
-			Role:    "user",
-			Content: prompt,
+		Model: c.model,
+		Messages: []Message{
+			{
+				Role:    "user",
+				Content: prompt,
+			},
 		},
-	},
-	Temperature: 0,
-	ResponseFormat: &ResponseFormat{
-		Type: "json_object",
-	},
-}
+		Temperature: 0,
+		ResponseFormat: &ResponseFormat{
+			Type: "json_object",
+		},
+	}
 
 	body, err := json.Marshal(request)
 	if err != nil {
 		return "", err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, baseURL, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodPost,
+		baseURL,
+		bytes.NewBuffer(body),
+	)
 	if err != nil {
 		return "", err
 	}

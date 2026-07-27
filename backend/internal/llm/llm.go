@@ -1,6 +1,10 @@
 package llm
 
-type Client interface {
-	Generate(prompt string) (string, error)
-}
+import "context"
 
+type Client interface {
+	Generate(
+		ctx context.Context,
+		prompt string,
+	) (string, error)
+}

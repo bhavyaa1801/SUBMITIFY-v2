@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+
 	"github.com/bhavyaa1801/submitify-v2/internal/models"
 	"github.com/bhavyaa1801/submitify-v2/internal/parser/question"
 )
@@ -18,8 +20,14 @@ func NewParseService(
 	}
 }
 
-func (s *ParseService) Parse(rawQuestions string) ([]models.Question, error) {
+func (s *ParseService) Parse(
+	ctx context.Context,
+	rawQuestions string,
+) ([]models.Question, error) {
 
-	return s.parser.Parse(rawQuestions)
+	return s.parser.Parse(
+		ctx,
+		rawQuestions,
+	)
 
 }

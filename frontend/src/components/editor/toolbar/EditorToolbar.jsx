@@ -4,6 +4,7 @@ import { useDocument } from "../context/DocumentContext";
 
 export default function EditorToolbar({
     onExport,
+    exporting,
 }) {
 
     const {
@@ -107,17 +108,11 @@ export default function EditorToolbar({
         if (!canEditSection) return;
 
         updateSectionStyle(
-
             activeSection.experimentIndex,
-
             activeSection.sectionIndex,
-
             role,
-
             {
-
                 align,
-
             }
 
         );
@@ -125,63 +120,38 @@ export default function EditorToolbar({
     };
 
     const changeImageWidth = (delta) => {
-
         if (!canEditSection) return;
-
         updateSectionStyle(
-
             activeSection.experimentIndex,
-
             activeSection.sectionIndex,
-
             "content",
-
             {
-
                 width: Math.max(
-
                     100,
-
                     (currentStyle.width || 350) + delta
-
                 ),
-
             }
-
         );
-
     };
 
     return (
-
         <aside className="editor-toolbar">
-
             <div className="toolbar-header">
-
                 <h2>📝 Editor</h2>
-
                 <p>
-
                     {
                         selected
                             ? `Editing ${selected.type} (${role})`
                             : "✨ Select a block to start editing"
                     }
-
                 </p>
-
             </div>
-
             <div className="toolbar-divider" />
-
             <div className="tool-section">
-
                 <span className="tool-heading">
                     Text Formatting
                 </span>
-
                 <div className="tool-grid">
-
                     <button
                         className={currentStyle.bold ? "active" : ""}
                         disabled={!isParagraph}
@@ -315,9 +285,12 @@ export default function EditorToolbar({
 
                 <button
                     className="export-btn"
+                    disabled={exporting}
                     onClick={() => onExport(document)}
                 >
-                    📄 Export PDF
+                    {exporting
+                        ? "⏳ Exporting..."
+                        : "📄 Export PDF"}
                 </button>
 
             </div>

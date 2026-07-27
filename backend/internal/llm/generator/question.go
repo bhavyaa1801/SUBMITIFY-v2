@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -13,6 +14,7 @@ type aiQuestion struct {
 }
 
 func (g *Generator) ParseQuestions(
+	ctx context.Context,
 	rawQuestions string,
 ) ([]models.Question, error) {
 
@@ -25,7 +27,10 @@ func (g *Generator) ParseQuestions(
 		return nil, err
 	}
 
-	response, err := g.llm.Generate(p)
+	response, err := g.llm.Generate(
+		ctx,
+		p,
+	)
 	if err != nil {
 		return nil, err
 	}

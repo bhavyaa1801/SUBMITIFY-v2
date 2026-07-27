@@ -22,7 +22,22 @@ export async function exportPDF(doc) {
     const a = window.document.createElement("a");
 
     a.href = url;
-    a.download = "document.pdf";
+    const sanitize = (text) => {
+      return String(text ?? "")
+        .trim()
+        .replace(/\s+/g, "_")
+        .replace(/[<>:"/\\|?*]/g, "");
+    };
+
+    const filename = [
+      sanitize(doc.metadata.roll_number),
+      sanitize(doc.metadata.student_name),
+      sanitize(doc.metadata.subject),
+    ]
+      .filter(Boolean)
+      .join("_");
+
+    a.download = `${filename}.pdf`;
 
     window.document.body.appendChild(a);
 
@@ -33,6 +48,6 @@ export async function exportPDF(doc) {
     window.URL.revokeObjectURL(url);
   } catch (err) {
     console.error(err);
-    alert("Failed to export PDF.");
+    throw err;
   }
 }

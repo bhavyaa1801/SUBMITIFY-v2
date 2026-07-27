@@ -1,56 +1,115 @@
 package service
 
 import (
+	"context"
 	"fmt"
+	"sort"
+	"sync"
+	"time"
+
 	"github.com/bhavyaa1801/submitify-v2/internal/api"
 	"github.com/bhavyaa1801/submitify-v2/internal/builder"
+	"github.com/bhavyaa1801/submitify-v2/internal/cache"
+	"github.com/bhavyaa1801/submitify-v2/internal/config"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/generator"
+	"github.com/bhavyaa1801/submitify-v2/internal/metrics"
 	"github.com/bhavyaa1801/submitify-v2/internal/models"
 )
 
 type GenerateService struct {
 	generator *generator.Generator
 	builder   *builder.Builder
+	cache     *cache.CacheService
 }
 
 func NewGenerateService(
 	generator *generator.Generator,
 	builder *builder.Builder,
+	cache *cache.CacheService,
 ) *GenerateService {
 
 	return &GenerateService{
 		generator: generator,
 		builder:   builder,
+		cache:     cache,
 	}
 }
 
 func (s *GenerateService) Generate(
+	ctx context.Context,
 	req api.GenerateRequest,
 ) (models.Document, error) {
-    fmt.Println("REQUEST PROFILE:", req.Profile)
+
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	profile := models.GetProfileDefinition(req.Profile)
 
-	fmt.Println("PROFILE:", profile.Name)
+	jobs := make(chan generationJob)
+	results := make(chan generationResult)
 
-	for _, s := range profile.Sections {
-		fmt.Println(s.Title)
+	var wg sync.WaitGroup
+
+	// Start workers
+	for i := 0; i < config.WorkerCount; i++ {
+		wg.Add(1)
+
+		go func() {
+			defer wg.Done()
+
+			s.worker(
+				ctx,
+				profile,
+				jobs,
+				results,
+			)
+		}()
 	}
 
-	contents := make([]builder.QuestionContent, 0, len(req.Questions))
+	// Send jobs
+	go func() {
+		defer close(jobs)
 
-	for _, q := range req.Questions {
+		for _, q := range req.Questions {
 
-		content, err := s.generator.Generate(
-			q.Number,
-			q.Text,
-			profile,
-		)
-		if err != nil {
-			return models.Document{}, err
+			select {
+
+			case <-ctx.Done():
+				return
+
+			case jobs <- generationJob{
+				Subject:  req.Metadata.Subject,
+				Question: q,
+			}:
+			}
+		}
+	}()
+
+	// Close results after all workers finish
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	var contents []builder.QuestionContent
+
+	for result := range results {
+
+		if result.Err != nil {
+
+			// Stop every other worker
+			cancel()
+
+			return models.Document{}, result.Err
 		}
 
-		contents = append(contents, content)
+		contents = append(contents, result.Content)
 	}
+
+	// Preserve original order
+	sort.Slice(contents, func(i, j int) bool {
+		return contents[i].Number < contents[j].Number
+	})
 
 	document := s.builder.Build(
 		req.Metadata,
@@ -59,4 +118,84 @@ func (s *GenerateService) Generate(
 	)
 
 	return document, nil
+}
+
+func (s *GenerateService) generateQuestion(
+	ctx context.Context,
+	subject string,
+	q models.Question,
+	profile models.ProfileDefinition,
+) (builder.QuestionContent, error) {
+
+	cached, err := s.cache.Find(
+		ctx,
+		subject,
+		q,
+		profile,
+	)
+
+	if err != nil {
+		fmt.Printf(
+			"[CACHE WARNING] lookup failed: %v\n",
+			err,
+		)
+	} else if cached != nil {
+		return *cached, nil
+	}
+
+	var lastErr error
+
+	for attempt := 1; attempt <= config.MaxGenerationRetries+1; attempt++ {
+
+		// Stop immediately if the request has been cancelled.
+		select {
+		case <-ctx.Done():
+			return builder.QuestionContent{}, ctx.Err()
+		default:
+		}
+
+		start := time.Now()
+
+		content, err := s.generator.Generate(
+			ctx,
+			q.Number,
+			q.Text,
+			profile,
+		)
+
+		metrics.LogGeneration(
+			q.Number,
+			attempt,
+			time.Since(start),
+			err,
+		)
+
+		if err == nil {
+
+			if cacheErr := s.cache.Save(
+				ctx,
+				subject,
+				q.Text,
+				profile,
+				content,
+			); cacheErr != nil {
+
+				fmt.Printf(
+					"[CACHE WARNING] save failed: %v\n",
+					cacheErr,
+				)
+			}
+
+			return content, nil
+		}
+
+		lastErr = err
+	}
+
+	return builder.QuestionContent{}, fmt.Errorf(
+		"question #%d failed after %d attempts: %w",
+		q.Number,
+		config.MaxGenerationRetries+1,
+		lastErr,
+	)
 }
