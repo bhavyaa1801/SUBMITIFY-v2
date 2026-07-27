@@ -79,7 +79,7 @@ func main() {
 		http.StripPrefix(
 			"/uploads/",
 			http.FileServer(
-				http.Dir("assets/uploads"),
+				http.Dir("tmp/uploads"),
 			),
 		),
 	)

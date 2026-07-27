@@ -44,7 +44,7 @@ func (h *Handler) UploadImage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Ensure uploads folder exists
-	err = os.MkdirAll("assets/uploads", os.ModePerm)
+	err = os.MkdirAll("tmp/uploads", os.ModePerm)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -56,7 +56,7 @@ func (h *Handler) UploadImage(w http.ResponseWriter, r *http.Request) {
 	filename := uuid.New().String() + ext
 
 	dstPath := filepath.Join(
-		"assets",
+		"tmp",
 		"uploads",
 		filename,
 	)

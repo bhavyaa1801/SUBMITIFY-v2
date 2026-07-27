@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/bhavyaa1801/submitify-v2/internal/models"
+	"github.com/bhavyaa1801/submitify-v2/internal/uploads"
 )
 
 func (h *Handler) ExportPDF(w http.ResponseWriter, r *http.Request) {
@@ -35,6 +36,9 @@ func (h *Handler) ExportPDF(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(pdf)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+
+	go uploads.Delete(document.Metadata.Logo)
 
 }
