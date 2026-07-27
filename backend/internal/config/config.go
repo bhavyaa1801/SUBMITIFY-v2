@@ -13,6 +13,7 @@ type Config struct {
 
 	ServerURL string
 	DatabaseURL string
+	Port string
 }
 
 func Load() *Config {
@@ -23,6 +24,7 @@ func Load() *Config {
 		GroqModel:  os.Getenv("GROQ_MODEL"),
 		ServerURL:  os.Getenv("SERVER_URL"),
 		DatabaseURL: os.Getenv("DATABASE_URL"),
+		Port:        os.Getenv("PORT"),
 	}
 
 	if cfg.GroqAPIKey == "" {

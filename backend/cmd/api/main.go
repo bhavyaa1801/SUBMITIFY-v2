@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"log"
+	"net/http"
 
 	"github.com/bhavyaa1801/submitify-v2/internal/builder"
+	"github.com/bhavyaa1801/submitify-v2/internal/cache"
 	"github.com/bhavyaa1801/submitify-v2/internal/config"
 	"github.com/bhavyaa1801/submitify-v2/internal/database"
 	"github.com/bhavyaa1801/submitify-v2/internal/handlers"
@@ -13,9 +14,8 @@ import (
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/groq"
 	"github.com/bhavyaa1801/submitify-v2/internal/middleware"
 	"github.com/bhavyaa1801/submitify-v2/internal/parser/question"
+	"github.com/bhavyaa1801/submitify-v2/internal/repository"
 	"github.com/bhavyaa1801/submitify-v2/internal/service"
-	"github.com/bhavyaa1801/submitify-v2/internal/cache"
-    "github.com/bhavyaa1801/submitify-v2/internal/repository"
 )
 
 func main() {
@@ -34,9 +34,9 @@ func main() {
 
 	cacheRepository := repository.NewPostgresCacheRepository(db)
 
-    cacheService := cache.NewCacheService(
-	cacheRepository,
-    )
+	cacheService := cache.NewCacheService(
+		cacheRepository,
+	)
 
 	gen := generator.New(llm)
 
@@ -84,6 +84,11 @@ func main() {
 		),
 	)
 
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("OK"))
+})
+
 	// Demo Routes
 	mux.HandleFunc("/demo", handlers.DemoDocument)
 	// mux.HandleFunc("/demo/html", handlers.DemoHTML)
@@ -91,10 +96,15 @@ func main() {
 
 	fmt.Println("Submitify V2 running on :8080")
 
-	if err := http.ListenAndServe(
-		":8080",
-		middleware.CORS(mux),
-	); err != nil {
-		panic(err)
+	port := cfg.Port
+	if port == "" {
+		port = "8080"
 	}
+
+	fmt.Printf("Submitify V2 running on :%s\n", port)
+
+	log.Fatal(http.ListenAndServe(
+		":"+port,
+		middleware.CORS(mux),
+	))
 }
