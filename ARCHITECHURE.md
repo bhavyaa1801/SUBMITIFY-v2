@@ -68,7 +68,7 @@ Only reusable question generations are cached.
 
 # High-Level Architecture
 
-![alt text](image.png)
+![architechure](images/image.png)
 
 ---
 
