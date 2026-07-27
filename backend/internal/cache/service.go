@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 
-	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 
 	"github.com/bhavyaa1801/submitify-v2/internal/builder"
+	"github.com/bhavyaa1801/submitify-v2/internal/metrics"
 	"github.com/bhavyaa1801/submitify-v2/internal/models"
 	"github.com/bhavyaa1801/submitify-v2/internal/repository"
 )
@@ -29,21 +30,16 @@ func NewCacheService(
 func (s *CacheService) Find(
 	ctx context.Context,
 	subject string,
-	question string,
+	q models.Question,
 	profile models.ProfileDefinition,
 ) (*builder.QuestionContent, error) {
 
 	cacheKey := BuildKey(
 		subject,
-		question,
+		q.Text,
 		string(profile.Name),
 	)
-	fmt.Println("========== CACHE FIND ==========")
-	fmt.Println("Key     :", cacheKey)
-	fmt.Println("Subject :", subject)
-	fmt.Println("Question:", question)
-	fmt.Println("Profile :", string(profile.Name))
-	fmt.Println("===============================")
+	lookupStart := time.Now()
 
 	entry, err := s.repo.FindByKey(
 		ctx,
@@ -54,9 +50,23 @@ func (s *CacheService) Find(
 	}
 
 	if entry == nil {
-		fmt.Println("[CACHE MISS]")
+
+		metrics.LogCacheMiss(
+			q.Text,
+			subject,
+			string(profile.Name),
+			time.Since(lookupStart),
+		)
+
 		return nil, nil
 	}
+
+	metrics.LogCacheHit(
+		q.Text,
+		subject,
+		string(profile.Name),
+		time.Since(lookupStart),
+	)
 
 	if err := s.repo.IncrementHit(
 		ctx,
@@ -65,15 +75,20 @@ func (s *CacheService) Find(
 		return nil, err
 	}
 
-	var content builder.QuestionContent
+	var sections map[string]string
 
 	if err := json.Unmarshal(
 		entry.ResponseJSON,
-		&content,
+		&sections,
 	); err != nil {
 		return nil, err
 	}
-	fmt.Println("[CACHE HIT]")
+
+	content := builder.QuestionContent{
+		Number:   q.Number,
+		Question: q.Text,
+		Sections: sections,
+	}
 
 	return &content, nil
 }
@@ -92,14 +107,7 @@ func (s *CacheService) Save(
 		string(profile.Name),
 	)
 
-	fmt.Println("========== CACHE SAVE ==========")
-	fmt.Println("Key     :", cacheKey)
-	fmt.Println("Subject :", subject)
-	fmt.Println("Question:", question)
-	fmt.Println("Profile :", string(profile.Name))
-	fmt.Println("===============================")
-
-	data, err := json.Marshal(content)
+	data, err := json.Marshal(content.Sections)
 	if err != nil {
 		return err
 	}
@@ -118,8 +126,22 @@ func (s *CacheService) Save(
 		HitCount: 0,
 	}
 
-	return s.repo.Save(
+	saveStart := time.Now()
+
+	err = s.repo.Save(
 		ctx,
 		entry,
 	)
+
+	if err == nil {
+		metrics.LogCacheSave(
+			question,
+			subject,
+			string(profile.Name),
+			time.Since(saveStart),
+		)
+	}
+
+	return err
+
 }

@@ -130,14 +130,16 @@ func (s *GenerateService) generateQuestion(
 	cached, err := s.cache.Find(
 		ctx,
 		subject,
-		q.Text,
+		q,
 		profile,
 	)
-	if err != nil {
-		return builder.QuestionContent{}, err
-	}
 
-	if cached != nil {
+	if err != nil {
+		fmt.Printf(
+			"[CACHE WARNING] lookup failed: %v\n",
+			err,
+		)
+	} else if cached != nil {
 		return *cached, nil
 	}
 
@@ -177,7 +179,11 @@ func (s *GenerateService) generateQuestion(
 				profile,
 				content,
 			); cacheErr != nil {
-				// TODO: log cache save failure
+
+				fmt.Printf(
+					"[CACHE WARNING] save failed: %v\n",
+					cacheErr,
+				)
 			}
 
 			return content, nil
