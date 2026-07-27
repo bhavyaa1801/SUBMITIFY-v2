@@ -1,709 +1,683 @@
-# Submitify 2.0 - Architecture Design Document
+# Submitify V2 Architecture
 
-> Version: 2.0
->
-> Backend: Go
->
-> Frontend: React + TailwindCSS
->
-> Database: PostgreSQL
->
-> AI: Groq API
->
-> Deployment: Docker
+## Overview
+
+Submitify V2 is an AI-powered academic document generation platform designed for college practical files and laboratory records.
+
+Unlike traditional AI document generators, Submitify separates **content generation**, **document editing**, and **PDF rendering** into independent stages.
+
+The AI is responsible only for generating structured content.
+
+The editor becomes the **Single Source of Truth**, ensuring that the exported PDF is always identical to what the user sees.
 
 ---
 
-# Vision
+# Design Principles
 
-Submitify 2.0 is an AI-powered academic document generator and editor.
+## 1. AI generates content only
 
-Unlike the current version, it is **not limited to programming practical files**.
+AI never generates HTML.
 
-The goal is to support multiple academic document types while maintaining a consistent user experience.
+AI never generates PDF.
 
-Examples:
+AI never decides layout.
 
-- Programming Labs
-- Theory Assignments
-- SQL / DBMS Labs
-- Networking Labs
-- DAA
-- AI
-- Mathematics
-- Future document types
-
-The architecture should allow adding new document types without changing the core system.
-
----
-
-# Core Philosophy
-
-The most important design decision is:
-
-> **AI never generates PDFs.**
-
-AI only generates structured document content.
-
-The Document Model becomes the single source of truth.
-
-```
-AI
-      │
-      ▼
-Document Model
-      │
- ┌────┼───────────┐
- ▼    ▼           ▼
-Preview Edit   Export
-```
-
-Everything in the application revolves around the Document Model.
-
----
-
-# User Flow
-
-```
-Landing Page
-      │
-      ▼
-Project Details
-      │
-      ▼
-Question Input
-      │
- ┌────┴───────────┐
- │                │
- ▼                ▼
-Paste Text    Upload Question Paper
- │                │
- └──────┬─────────┘
-        ▼
-AI Question Parser
-        ▼
-Structured Questions
-        ▼
-Review Questions
-        ▼
-AI Document Classification
-        ▼
-Load Document Profile
-        ▼
-AI Content Generation
-        ▼
-Document Model
-        ▼
-Editable Document Preview
-        ▼
-Export
-   ├── PDF
-   └── DOCX
-```
-
----
-
-# Step 1 - Project Details
-
-The user enters project metadata.
+AI only returns structured sections.
 
 Example:
 
-- University
-- Department
-- Semester
-- Subject
-- Subject Code
-- Programming Language
-- Faculty Name
-- Student Name
-- Roll Number
-- University Logo
-
-These become
-
+```json
+{
+  "Algorithm": "...",
+  "Source Code": "...",
+  "Output": "..."
+}
 ```
-Document.Metadata
-```
-
-No AI is involved.
 
 ---
 
-# Step 2 - Question Input
+## 2. Editor is the Single Source of Truth
 
-Two input methods are supported.
+Everything displayed inside the editor is stored in a Document Model.
 
-## Manual Input
-
-User pastes questions.
-
-Example
+The export service simply renders that model.
 
 ```
-1. Implement Bubble Sort.
-
-2. Implement Merge Sort.
-```
-
-The pasted text is **also passed through the AI Parser**.
-
-Manual input and uploaded question papers both follow the exact same pipeline.
-
----
-
-## Question Paper Parsing
-
-User uploads a question paper.
-
-Pipeline
-
-```
-Question Paper
-        │
-        ▼
-Text Extraction
-        │
-        ▼
-AI Parser
-        │
-        ▼
-Structured Questions
-```
-
-Regex parsing is completely removed.
-
----
-
-# Step 3 - Review Questions
-
-The review screen already exists and will remain.
-
-Users can:
-
-- Edit questions
-- Delete questions
-- Add questions
-- Reorder questions
-
-This guarantees that incorrect AI parsing can always be fixed before generation.
-
----
-
-# Step 4 - AI Document Classification
-
-Instead of maintaining hundreds of subjects, AI classifies the document into a small set of document profiles.
-
-Possible profiles
-
-- Programming Lab
-- Theory Assignment
-- SQL Lab
-- Mathematics
-- Generic Report
-
-AI answers only one question:
-
-> Which document profile best matches these questions?
-
-AI never decides the document structure.
-
----
-
-# Step 5 - Document Profiles
-
-Each profile defines the document structure.
-
-## Programming Lab
-
-Sections
-
-- Aim
-- Algorithm
-- Source Code
-- Output
-
----
-
-## Theory Assignment
-
-Sections
-
-- Answer
-
----
-
-## SQL Lab
-
-Sections
-
-- Aim
-- Theory
-- SQL Query
-- Output
-
----
-
-Future profiles can easily be added.
-
-Examples
-
-- Networking Lab
-- Physics Lab
-- Chemistry Lab
-- Operating Systems
-- AI Lab
-
-Only new profiles are added.
-
-The renderer never changes.
-
----
-
-# Step 6 - AI Content Generation
-
-The AI receives
-
-- Metadata
-- Question
-- Document Profile
-
-Example
-
-```
-Question
-
-Implement Bubble Sort
-
-Sections
-
-Aim
-
-Algorithm
-
-Source Code
-
-Output
-```
-
-AI fills only these predefined sections.
-
-It never invents new section names.
-
-This guarantees consistency across generated documents.
-
----
-
-# Step 7 - Document Model
-
-The Document Model is the heart of Submitify.
-
-```
-Document
-│
-├── Metadata
-├── Cover Page
-├── Index
-├── Experiments
-└── Exports
-```
-
-Everything in the system uses this model.
-
----
-
-## Metadata
-
-Stores project information.
-
-Example
-
-- University
-- Department
-- Semester
-- Subject
-- Subject Code
-- Student
-- Faculty
-- Programming Language
-- Logo
-
----
-
-## Cover Page
-
-Automatically generated.
-
-Uses Metadata.
-
-No AI required.
-
----
-
-## Index
-
-Automatically generated.
-
-Uses the reviewed question list.
-
-If questions are reordered,
-
-the Index updates automatically.
-
----
-
-## Experiments
-
-Current version
-
-```
-Experiment
-
-Aim
-
-Algorithm
-
-Code
-
-Output
-```
-
-New version
-
-```
-Experiment
-
-↓
-
-Sections[]
-```
-
-This removes the rigidity of the current architecture.
-
----
-
-## Section
-
-Every experiment contains multiple sections.
-
-Each section contains
-
-```
-Title
-
-Type
-
-Content
-
-Order
-```
-
-Example
-
-```
-Title
-
-Source Code
-
-Type
-
-code
-
-Content
-
-int main() { ... }
-
-Order
-
-3
-```
-
-Examples of supported section types
-
-- paragraph
-- code
-- table
-- equation (future)
-- list
-
----
-
-# Step 8 - Rendering Engine
-
-The renderer never knows what an "Aim" is.
-
-It simply renders sections based on their type.
-
-Example
-
-```
-paragraph
-
-↓
-
-<p>
-
--------------------
-
-code
-
-↓
-
-<pre>
-
--------------------
-
-table
-
-↓
-
-<table>
-
--------------------
-
-equation
-
-↓
-
-KaTeX (Future)
-```
-
-The renderer remains completely generic.
-
----
-
-# Step 9 - Editable Preview
-
-This is the biggest UX improvement.
-
-Current
-
-```
-Generate
-
-↓
-
-Preview
-
-↓
-
-Download
-```
-
-New
-
-```
-Generate
-
-↓
-
-Editable Preview
-
-↓
-
-Download
-```
-
-The preview still contains
-
-- Cover Page
-- Index
-- Experiments
-
-The difference is that users can edit the generated content directly.
-
-Users edit the **document**, not JSON.
-
-Example
-
-```
-Aim
-
-↓
-
-Click
-
-↓
-
-Edit
-
-↓
-
-Save
-
-↓
-
-Preview Updates
-```
-
-Code sections open a code editor.
-
-Paragraphs become editable text.
-
-The editing experience should feel similar to Google Docs or Notion.
-
-Internally
-
-```
-User Edit
-
-↓
-
-Update Document Model
-
-↓
-
-Re-render HTML
-
-↓
-
-Refresh Preview
-```
-
-The user never notices the internal process.
-
----
-
-# Step 10 - Export
-
-Once editing is complete
-
-```
+Editor
+      ↓
 Document Model
-      │
-      ▼
-HTML Rendering
-      │
- ┌────┴────┐
- ▼         ▼
-PDF      DOCX
+      ↓
+Renderer
+      ↓
+PDF
 ```
 
-PDF and DOCX are simply export formats.
-
-The Document Model remains the source of truth.
+No regeneration happens during export.
 
 ---
 
-# AI Responsibilities
+## 3. Stateless AI
 
-The AI performs only three responsibilities.
+Every AI request is independent.
 
-## 1. Question Parsing
+The backend never stores conversation history.
 
-```
-Raw Text
-
-↓
-
-Structured Questions
-```
-
----
-
-## 2. Document Classification
-
-```
-Questions
-
-↓
-
-Programming
-
-Theory
-
-SQL
-
-Math
-
-Generic
-```
-
----
-
-## 3. Content Generation
-
-```
-Question
-
-+
-
-Document Profile
-
-↓
-
-Filled Sections
-```
-
-AI never renders HTML.
-
-AI never generates PDFs.
-
-AI never handles exporting.
-
----
-
-# Backend Responsibilities
-
-The backend is responsible for
-
-- Project Metadata
-- Document Profiles
-- Document Model
-- HTML Rendering
-- Editable Preview
-- PDF Export
-- DOCX Export
-- PostgreSQL
-- File Uploads
-- AI Integration
-- Logging
-- Docker
-- Deployment
+Only reusable question generations are cached.
 
 ---
 
 # High-Level Architecture
 
+![alt text](image.png)
+
+---
+
+# Backend Architecture
+
 ```
-                    User
-                      │
-                      ▼
-              Project Details
-                      │
-          ┌───────────┴────────────┐
-          ▼                        ▼
-   Paste Questions         Upload Question Paper
-          │                        │
-          └────────────┬───────────┘
-                       ▼
-                AI Question Parser
-                       ▼
-             Structured Questions
-                       ▼
-                Review Questions
-                       ▼
-          AI Document Classification
-                       ▼
-              Document Profile
-                       ▼
-             AI Content Generation
-                       ▼
-                Document Model
-      ┌───────────────┼────────────────┐
-      ▼               ▼                ▼
- Cover Generator  Index Generator  Experiment Renderer
-      │               │                │
-      └───────────────┴────────────────┘
-                      ▼
-            Editable HTML Preview
-                      ▼
-              User Edits Content
-                      ▼
-            Updated Document Model
-                      ▼
-              Export PDF / DOCX
+internal/
+
+├── api/
+│
+├── builder/
+│
+├── cache/
+│
+├── config/
+│
+├── database/
+│
+├── handlers/
+│
+├── llm/
+│
+├── metrics/
+│
+├── middleware/
+│
+├── models/
+│
+├── parser/
+│
+├── repository/
+│
+├── service/
+│
+├── uploads/
+│
+└── validator/
 ```
+
+---
+
+# Request Flow
+
+## Step 1 — Metadata
+
+The user enters:
+
+- University
+- Department
+- Subject
+- Subject Code
+- Semester
+- Course
+- Language
+- Student Name
+- Roll Number
+- Faculty
+- Logo
+
+No AI is involved.
+
+---
+
+## Step 2 — Question Parsing
+
+User pastes a raw question sheet.
+
+Example:
+
+```
+1 Reverse a Linked List
+
+2 Reverse an Array
+
+3 Binary Search
+```
+
+Parser Pipeline
+
+```
+Raw Text
+
+    ↓
+
+Regex Parser
+
+    ↓
+
+Validation
+
+    ↓
+
+LLM Fallback (if parsing fails)
+
+    ↓
+
+Questions[]
+```
+
+Output
+
+```go
+[]Question{
+    {
+        Number:1,
+        Text:"Reverse a Linked List",
+    },
+    {
+        Number:2,
+        Text:"Reverse an Array",
+    },
+}
+```
+
+---
+
+## Step 3 — Review
+
+Before AI generation the user can
+
+- Edit questions
+- Delete questions
+- Add new questions
+- Reorder automatically
+
+No AI yet.
+
+---
+
+# AI Generation Pipeline
+
+After clicking Generate
+
+```
+Questions
+
+      ↓
+
+Worker Pool
+
+      ↓
+
+Generate Question
+
+      ↓
+
+Cache Lookup
+
+      ↓
+
+Cache Hit?
+
+      │
+
+ ┌────┴────┐
+
+ YES      NO
+
+ │         │
+
+ ▼         ▼
+
+Return    Groq API
+
+             │
+
+             ▼
+
+      Validate JSON
+
+             ▼
+
+      Store in Cache
+
+             ▼
+
+Return Content
+```
+
+---
+
+# Worker Pool
+
+Questions are generated concurrently.
+
+```
+Questions
+
+Q1
+
+Q2
+
+Q3
+
+Q4
+
+Q5
+
+        │
+
+        ▼
+
++----------------------+
+
+Worker 1
+
+Worker 2
+
+Worker 3
+
+Worker 4
+
+Worker 5
+
++----------------------+
+
+        │
+
+        ▼
+
+Results
+
+        ▼
+
+Sorted by Question Number
+
+        ▼
+
+Builder
+```
+
+Advantages
+
+- Faster generation
+- Better CPU utilization
+- Independent retries
+- Easy scaling
+
+---
+
+# Retry Mechanism
+
+Each question retries independently.
+
+```
+Question
+
+Attempt 1
+
+↓
+
+Failed
+
+↓
+
+Attempt 2
+
+↓
+
+Failed
+
+↓
+
+Attempt 3
+
+↓
+
+Success
+```
+
+Only failed questions retry.
+
+---
+
+# Cache Architecture
+
+Submitify uses PostgreSQL as an AI response cache.
+
+Purpose
+
+- Reduce AI cost
+- Improve latency
+- Reuse identical generations
+
+---
+
+## Cache Key
+
+```
+SHA256(
+
+Profile
+
++
+
+Prompt Version
+
++
+
+Normalized Question
+
+)
+```
+
+(Currently Subject is also included in V2.)
+
+---
+
+## Cache Lookup
+
+```
+Question
+
+↓
+
+Normalize
+
+↓
+
+Build SHA256
+
+↓
+
+Database Lookup
+
+↓
+
+Found?
+
+YES → Return
+
+NO → Generate
+```
+
+---
+
+## Cache Storage
+
+Cached response contains
+
+```
+CacheEntry
+
+ID
+
+Cache Key
+
+Subject
+
+Normalized Question
+
+Profile
+
+Prompt Version
+
+Response JSON
+
+Hit Count
+
+Created At
+
+Last Used
+```
+
+Only AI response sections are stored.
+
+Question number is intentionally excluded.
+
+---
+
+# Document Builder
+
+Builder converts AI output into the complete document.
+
+```
+Metadata
+
++
+
+Profile
+
++
+
+Generated Questions
+
+↓
+
+Document Builder
+
+↓
+
+Document Model
+```
+
+---
+
+# Document Model
+
+```
+Document
+
+Metadata
+
+Profile
+
+Experiments[]
+
+Experiment
+
+Number
+
+Question
+
+Sections[]
+
+Section
+
+Title
+
+Type
+
+Content
+```
+
+---
+
+# React Document Editor
+
+Editor renders the Document Model.
+
+Features
+
+- Editable headings
+- Editable paragraphs
+- Editable code
+- Insert sections
+- Insert images
+- Text formatting
+- Live preview
+
+No AI is used inside the editor.
+
+---
+
+# Export Pipeline
+
+```
+Document Model
+
+↓
+
+POST /export/pdf
+
+↓
+
+Node Export Service
+
+↓
+
+HTML Renderer
+
+↓
+
+Chromium
+
+↓
+
+PDF
+```
+
+PDF is generated from the same document shown in the editor.
+
+---
+
+# Image Upload Architecture
+
+User uploads logo
+
+↓
+
+tmp/uploads/
+
+↓
+
+React displays
+
+↓
+
+PDF uses image
+
+↓
+
+Image deleted after export
+
+Temporary uploads prevent unnecessary storage growth.
+
+---
+
+# Logging
+
+Generation Logs
+
+```
+Question
+
+Attempt
+
+Duration
+
+Status
+```
+
+Cache Logs
+
+```
+CACHE HIT
+
+CACHE MISS
+
+CACHE SAVE
+```
+
+These logs simplify debugging and performance monitoring.
+
+---
+
+# Frontend Architecture
+
+```
+React
+
+Create Document
+
+│
+
+├── Project Info
+
+├── Question Sheet
+
+├── Review Questions
+
+└── Document Editor
+```
+
+---
+
+# Frontend Flow
+
+```
+Landing Page
+
+↓
+
+Project Information
+
+↓
+
+Paste Questions
+
+↓
+
+Review Questions
+
+↓
+
+Generate
+
+↓
+
+Document Editor
+
+↓
+
+Export PDF
+```
+
+---
+
+# Services
+
+## Parse Service
+
+Responsible for
+
+- Parsing question sheets
+- Validation
+- LLM fallback
+
+---
+
+## Generate Service
+
+Responsible for
+
+- Worker pool
+- Retry logic
+- Cache lookup
+- AI generation
+- Document building
+
+---
+
+## Export Service
+
+Responsible for
+
+- Sending document to renderer
+- Returning PDF
+- Temporary image cleanup
 
 ---
 
@@ -712,69 +686,154 @@ The backend is responsible for
 ## Frontend
 
 - React
-- TailwindCSS
+- Vite
+- CSS
+- Context API
+
+---
 
 ## Backend
 
 - Go
-- net/http
 - PostgreSQL
-- Docker
-- HTML Templates
+- pgx
+- Worker Pool
+- SHA256 Cache
+
+---
 
 ## AI
 
-- Groq API
-- Structured Output
-
-## Export
-
-- HTML → PDF
-- HTML → DOCX
+- Groq
+- Llama 3.3 70B
 
 ---
 
-# Future Enhancements
+## Database
 
-The architecture is intentionally designed so future features can be added without major rewrites.
-
-Examples
-
-- More Document Profiles
-- Multiple University Templates
-- Save / Load Projects
-- Authentication (if users actually need it)
-- Regenerate Individual Sections
-- Markdown Export
-- HTML Export
-- KaTeX Equation Support
-- Image Generation
-- Version History
-- Auto Save
-- Collaborative Editing
+- Neon PostgreSQL
 
 ---
 
-# Final Design Principle
+## PDF Rendering
 
-The Document Model is the heart of Submitify 2.0.
+- Node.js
+- HTML Templates
+- Headless Chromium
 
-Every feature should extend the Document Model instead of bypassing it.
+---
+
+# Design Decisions
+
+### Why Worker Pool?
+
+- Parallel generation
+- Better throughput
+- Faster user experience
+
+---
+
+### Why PostgreSQL Cache?
+
+- Persistent
+- Fast lookups
+- Analytics friendly
+- Simple deployment
+
+---
+
+### Why Temporary Uploads?
+
+User-uploaded logos are required only during PDF generation.
+
+Images are stored in
 
 ```
-Metadata
-      │
-Questions
-      │
-AI
-      │
+tmp/uploads/
+```
+
+and automatically deleted after successful export.
+
+---
+
+### Why Single Source of Truth?
+
+Avoids inconsistencies.
+
+```
+Editor
+
+↓
+
 Document Model
-      │
- ┌────┼─────────┐
- ▼    ▼         ▼
-Preview Edit  Export
+
+↓
+
+PDF
 ```
 
-If a future feature naturally fits into the Document Model, the architecture remains clean, maintainable, and extensible.
+No duplicated state.
 
 ---
+
+# Future Improvements
+
+- Improved semantic normalization
+- Cache analytics dashboard
+- Cache cleanup scheduler
+- Multi-language generation
+- Additional document templates
+- User accounts and cloud storage
+- Collaborative editing
+
+---
+
+# Architecture Summary
+
+```
+User
+ │
+ ▼
+Metadata + Questions
+ │
+ ▼
+Parse Service
+ │
+ ▼
+Question Review
+ │
+ ▼
+Generate Service
+ │
+ ├────────────── Cache (PostgreSQL)
+ │                     │
+ │                     ▼
+ │                 Cache Hit
+ │
+ ▼
+Groq AI
+ │
+ ▼
+Builder
+ │
+ ▼
+Document Model
+ │
+ ▼
+Document Editor
+ │
+ ▼
+Export Service
+ │
+ ▼
+Chromium Renderer
+ │
+ ▼
+PDF
+```
+
+---
+
+**Version:** Submitify V2.0
+
+**Architecture Style:** Layered Architecture + Service-Oriented Design + Worker Pool + Cache-Aside Pattern

@@ -1,329 +1,283 @@
-# Submitify 2.0
+# Submitify 2.0 🚀
 
-> AI-powered Academic Document Generator & Editor built with Go, PostgreSQL and React.
+Submitify is an AI-powered platform for generating and editing academic documents. It automates repetitive documentation while allowing users to review, customize, and export professional-quality documents.
 
-Submitify 2.0 is a complete redesign of the original Submitify project.
+> **AI-powered Academic Document Generation Platform** built with
+> **Go**, **React**, **PostgreSQL**, and **Groq AI**.
 
-Instead of being limited to programming practical files, Submitify 2.0 is designed as a **generic academic document generation platform** capable of generating multiple types of academic documents while maintaining a clean, editable and print-ready workflow.
+![Go](https://img.shields.io/badge/Go-1.24-00ADD8)
+![React](https://img.shields.io/badge/React-19-61DAFB)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791)
+![Groq](https://img.shields.io/badge/AI-Groq-orange)
 
----
-## Why Submitify?
+------------------------------------------------------------------------
 
-Students spend hours formatting laboratory files, writing repetitive experiment content, creating cover pages, and maintaining indexes.
+##  Project Preview
 
-Submitify automates this workflow by combining AI-powered content generation with structured document editing, allowing students to generate complete academic documents in minutes while still retaining full control over the final output.
+### Landing Page
 
-Instead of replacing students, Submitify accelerates the documentation process by handling repetitive work and letting users focus on reviewing and refining the generated content.
+![Landing](images/landing.png)
 
----
-## Features
+### List of Questions for parsing
 
-### Smart Question Input
+![Questions](images/step2_v2.png)
 
-- Paste questions manually
-- Upload question paper
-- AI-powered question parsing
-- Question review before generation
+### Review details
 
----
+![deatils](images/review.png)
 
-### AI-Powered Generation
+### Document Editor
 
-- AI Document Classification
-- AI Content Generation
-- Structured Outputs
-- Groq API Integration
-- Multi-document support
+![Editor](images/DOCEDIT.png)
 
----
+### Architecture
 
-### Academic Document Generation
+![Architecture](images/image.png)
 
-Automatically generates
+------------------------------------------------------------------------
 
-- Cover Page
-- Index
-- Experiment Content
+# Evolution from Submitify V1
 
-Supports
+Submitify 2.0 is a complete architectural redesign of the original
+**Submitify V1**.
 
-- Programming Labs
-- Theory Assignments
-- SQL / DBMS Labs
-- Generic Academic Documents
+**V1** - AI-assisted practical file generation - Sequential generation -
+Limited editing workflow - Focused primarily on programming practical
+files
 
----
+**V2** - ✅ Generic academic document generation platform - ✅ Rich
+React document editor - ✅ Worker Pool based concurrent AI generation -
+✅ PostgreSQL AI response cache - ✅ Document Model architecture - ✅
+Professional PDF/DOCX export - ✅ Scalable service-oriented backend
 
-### Editable Preview
+------------------------------------------------------------------------
 
-Instead of downloading immediately,
+# Why Submitify?
 
-Users can
+Students spend hours creating laboratory files, reports and assignments.
 
-- Preview the generated document
-- Edit generated content
-- Update experiments
-- Modify code
-- Edit paragraphs
+Submitify automates repetitive documentation by combining AI-powered
+content generation with a structured editor, allowing users to generate
+complete academic documents in minutes while retaining full control over
+the final result.
 
-before exporting.
+------------------------------------------------------------------------
 
----
+# Features
 
-### Export
+## Smart Question Input
 
-- PDF Export
-- DOCX Export
+-   Paste questions
+-   Upload question paper
+-   AI-powered parsing
+-   Review & edit before generation
 
----
+## AI-Powered Generation
 
-## Architecture
+-   Document classification
+-   Structured content generation
+-   Groq API integration
+-   Multiple document profiles
 
-Unlike the previous version, Submitify 2.0 follows a **Document Model Architecture**.
+## Rich Document Editor
 
-The AI does **not** generate PDFs.
+Unlike traditional AI generators that immediately produce a PDF,
+Submitify places every generated document inside a **fully editable
+React-based document editor**.
 
-Instead,
+### Editor Features
 
-```text
-AI
-      │
-      ▼
-Document Model
-      │
- ┌────┼────────────┐
- ▼    ▼            ▼
-Preview Edit     Export
-```
+-   Live document preview
+-   Editable cover page
+-   Editable index
+-   Editable experiment sections
+-   Editable code blocks
+-   Rich text editing
+-   Image insertion
+-   Section management
+-   Print-ready preview
 
-The **Document Model** becomes the single source of truth for the entire application.
+The editor is the **Single Source of Truth**. The exported PDF is
+generated from exactly the same document model shown in the editor.
 
----
+## High Performance AI Pipeline
 
-## Workflow
+-   Worker Pool
+-   Parallel generation
+-   Independent retries
+-   Better CPU utilization
+-   Faster generation
 
-```text
+## Intelligent PostgreSQL Cache
+
+-   SHA-256 cache keys
+-   Cache-aside pattern
+-   Reuses previous AI responses
+-   Lower AI cost & latency
+
+------------------------------------------------------------------------
+
+# Architecture
+
+![alt text](images/image.png)
+
+------------------------------------------------------------------------
+
+# Workflow
+
+``` text
 Project Details
-        │
-        ▼
+      ↓
 Question Input
-        │
- ┌──────┴─────────┐
- │                │
- ▼                ▼
-Manual Text   Question Paper
- │                │
- └──────┬─────────┘
-        ▼
+      ↓
 AI Question Parser
-        ▼
+      ↓
 Review Questions
-        ▼
-AI Document Classification
-        ▼
-Document Profile
-        ▼
-AI Content Generation
-        ▼
-Document Model
-        ▼
-Editable Preview
-        ▼
+      ↓
+Worker Pool
+      ↓
+Cache Lookup
+      ↓
+Groq AI
+      ↓
+Document Builder
+      ↓
+Document Editor
+      ↓
 Export
 ```
 
----
+------------------------------------------------------------------------
 
-## AI Responsibilities
-
-The AI performs only three responsibilities.
-
-### 1. Question Parsing
-
-Converts raw text into structured questions.
-
----
-
-### 2. Document Classification
-
-Detects the document profile.
-
-Examples
-
-- Programming Lab
-- Theory Assignment
-- SQL Lab
-- Mathematics
-- Generic Report
-
----
-
-### 3. Content Generation
-
-Fills predefined document sections using Structured Outputs.
-
-The AI never
-
-- Generates PDFs
-- Generates HTML
-- Decides layouts
-
----
-
-## Document Model
-
-```
-Document
-│
-├── Metadata
-├── Cover Page
-├── Index
-├── Experiments
-└── Exports
-```
-
-Each Experiment contains
-
-```
-Experiment
-│
-└── Sections[]
-```
-
-Each Section
-
-```
-Title
-Type
-Content
-Order
-```
-
-This architecture allows Submitify to support multiple document types without changing the core system.
-
----
-
-## Tech Stack
+# Tech Stack
 
 ### Frontend
 
-- React
-- TailwindCSS
+-   React
+-   Vite
+-   Tailwind CSS
 
 ### Backend
 
-- Go
-- net/http
-- PostgreSQL
-- Docker
+-   Go
+-   net/http
+-   PostgreSQL
+-   pgx
+-   Worker Pool
+-   Docker
 
 ### AI
 
-- Groq API
-- Structured Outputs
+-   Groq API
+-   Llama 3.3 70B
 
 ### Export
 
-- HTML Templates
-- PDF
-- DOCX
+-   HTML Templates
+-   Headless Chromium
+-   PDF
+-   DOCX
 
----
+### Deployment
 
-## Project Structure
+-   Vercel
+-   Render
+-   Neon PostgreSQL
 
-```
-submitify-v2
-│
-├── backend
-│
-├── frontend
-│
-├── migrations
-│
-├── docker
-│
-├── docs
-│
+------------------------------------------------------------------------
+
+# Folder Structure
+
+``` text
+submitify-v2/
+├── backend/
+├── frontend/
+├── docs/
+├── images/
+│   ├── architecture.png
+│   ├── landing.png
+│   ├── parser.png
+│   ├── editor.png
+│   └── export.png
 ├── README.md
-├── ARCHITECTURE.md
-├── ROADMAP.md
-├── DATABASE.md
-├── API.md
-└── STRUCTURE.md
+└── ARCHITECTURE.md
 ```
 
----
+------------------------------------------------------------------------
 
-## Development Status
+# Installation
 
-Current Phase
+``` bash
+git clone https://github.com/<username>/submitify-v2.git
+cd submitify-v2
+```
 
-- [x] Product Architecture
-- [x] System Design
-- [x] AI Pipeline Design
-- [ ] Backend Foundation
-- [ ] Database
-- [ ] Renderer
-- [ ] AI Integration
-- [ ] Editable Preview
-- [ ] Export
-- [ ] Deployment
+### Backend
 
----
+``` bash
+cd backend
+go mod tidy
+go run .
+```
 
-## Roadmap
+### Frontend
 
-### Phase 1
+``` bash
+cd frontend
+npm install
+npm run dev
+```
 
-- Backend Foundation
-- PostgreSQL
-- Docker
-- Logging
-- Configuration
+------------------------------------------------------------------------
 
-### Phase 2
+# Environment Variables
 
-- Document Model
-- HTML Renderer
-- Preview Engine
+Backend
 
-### Phase 3
+``` env
+GROQ_API_KEY=
+DATABASE_URL=
+PORT=
+```
 
-- Groq Integration
-- AI Parser
-- AI Classification
-- AI Generation
+Frontend
 
-### Phase 4
+``` env
+VITE_API_URL=
+```
 
-- Editable Preview
-- Export Engine
+------------------------------------------------------------------------
 
-### Phase 5
+# Screenshots to Add
 
-- Deployment
+Create an `images/` folder in the repository root and add:
 
----
+  Image              Purpose
+  ------------------ ------------------------
+  landing.png        Landing page
+  parser.png         Question parser/review
+  editor.png         Rich document editor
+  export.png         Final exported PDF
+  architecture.png   Architecture diagram
+  workflow.gif       Optional demo GIF
 
-## Documentation
+------------------------------------------------------------------------
 
-Detailed project documentation is available inside the `/docs` directory.
+# Roadmap
 
-- Architecture
-- API Design
-- Database Design
-- Roadmap
-- Folder Structure
+-   User Authentication
+-   Cloud Storage
+-   Collaborative Editing
+-   Semantic Cache
+-   Analytics Dashboard
+-   Multiple Templates
+-   Multi-language Support
 
----
+------------------------------------------------------------------------
 
-## Inspiration
+##  Author
 
-Submitify 2.0 is a complete architectural redesign of the original Submitify project.
+**Bhavya**
 
-Rather than rewriting the old codebase, the project rebuilds the backend from scratch using lessons learned from Version 1 while reusing successful product ideas, UI concepts and document templates.
-
-The goal is to create a scalable, production-ready academic document generation platform.
-
----
+Built to simplify academic document creation through AI while giving
+users complete control with a rich document editor.
