@@ -8,6 +8,7 @@ import (
 )
 
 type generationJob struct {
+	Subject string
 	Question models.Question
 }
 
@@ -28,6 +29,7 @@ func (s *GenerateService) worker(
 
 		content, err := s.generateQuestion(
 			ctx,
+			job.Subject,
 			job.Question,
 			profile,
 		)

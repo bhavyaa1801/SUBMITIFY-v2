@@ -12,6 +12,7 @@ type Config struct {
 	GroqModel  string
 
 	ServerURL string
+	DatabaseURL string
 }
 
 func Load() *Config {
@@ -21,6 +22,7 @@ func Load() *Config {
 		GroqAPIKey: os.Getenv("GROQ_API_KEY"),
 		GroqModel:  os.Getenv("GROQ_MODEL"),
 		ServerURL:  os.Getenv("SERVER_URL"),
+		DatabaseURL: os.Getenv("DATABASE_URL"),
 	}
 
 	if cfg.GroqAPIKey == "" {
@@ -35,6 +37,9 @@ func Load() *Config {
 	if cfg.ServerURL == "" {
 		cfg.ServerURL = "http://localhost:8080"
 	}
+	if cfg.DatabaseURL == "" {
+	   log.Fatal("DATABASE_URL not found")
+    }
 
 	return cfg
 }

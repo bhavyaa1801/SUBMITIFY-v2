@@ -3,15 +3,19 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"log"
 
 	"github.com/bhavyaa1801/submitify-v2/internal/builder"
 	"github.com/bhavyaa1801/submitify-v2/internal/config"
+	"github.com/bhavyaa1801/submitify-v2/internal/database"
 	"github.com/bhavyaa1801/submitify-v2/internal/handlers"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/generator"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/groq"
 	"github.com/bhavyaa1801/submitify-v2/internal/middleware"
 	"github.com/bhavyaa1801/submitify-v2/internal/parser/question"
 	"github.com/bhavyaa1801/submitify-v2/internal/service"
+	"github.com/bhavyaa1801/submitify-v2/internal/cache"
+    "github.com/bhavyaa1801/submitify-v2/internal/repository"
 )
 
 func main() {
@@ -22,6 +26,17 @@ func main() {
 		cfg.GroqAPIKey,
 		cfg.GroqModel,
 	)
+	db, err := database.New(cfg.DatabaseURL)
+	if err != nil {
+		log.Fatalf("database connection failed: %v", err)
+	}
+	defer db.Close()
+
+	cacheRepository := repository.NewPostgresCacheRepository(db)
+
+    cacheService := cache.NewCacheService(
+	cacheRepository,
+    )
 
 	gen := generator.New(llm)
 
@@ -36,10 +51,11 @@ func main() {
 	generateService := service.NewGenerateService(
 		gen,
 		docBuilder,
+		cacheService,
 	)
 
-    exportService := service.NewExportService()
-	
+	exportService := service.NewExportService()
+
 	handler := handlers.New(
 		parseService,
 		generateService,

@@ -3,12 +3,13 @@ package service
 import (
 	"context"
 	"fmt"
-	"time"
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/bhavyaa1801/submitify-v2/internal/api"
 	"github.com/bhavyaa1801/submitify-v2/internal/builder"
+	"github.com/bhavyaa1801/submitify-v2/internal/cache"
 	"github.com/bhavyaa1801/submitify-v2/internal/config"
 	"github.com/bhavyaa1801/submitify-v2/internal/llm/generator"
 	"github.com/bhavyaa1801/submitify-v2/internal/metrics"
@@ -18,16 +19,19 @@ import (
 type GenerateService struct {
 	generator *generator.Generator
 	builder   *builder.Builder
+	cache     *cache.CacheService
 }
 
 func NewGenerateService(
 	generator *generator.Generator,
 	builder *builder.Builder,
+	cache *cache.CacheService,
 ) *GenerateService {
 
 	return &GenerateService{
 		generator: generator,
 		builder:   builder,
+		cache:     cache,
 	}
 }
 
@@ -74,6 +78,7 @@ func (s *GenerateService) Generate(
 				return
 
 			case jobs <- generationJob{
+				Subject:  req.Metadata.Subject,
 				Question: q,
 			}:
 			}
@@ -90,16 +95,16 @@ func (s *GenerateService) Generate(
 
 	for result := range results {
 
-	if result.Err != nil {
+		if result.Err != nil {
 
-		// Stop every other worker
-		cancel()
+			// Stop every other worker
+			cancel()
 
-		return models.Document{}, result.Err
+			return models.Document{}, result.Err
+		}
+
+		contents = append(contents, result.Content)
 	}
-
-	contents = append(contents, result.Content)
-}
 
 	// Preserve original order
 	sort.Slice(contents, func(i, j int) bool {
@@ -117,9 +122,24 @@ func (s *GenerateService) Generate(
 
 func (s *GenerateService) generateQuestion(
 	ctx context.Context,
+	subject string,
 	q models.Question,
 	profile models.ProfileDefinition,
 ) (builder.QuestionContent, error) {
+
+	cached, err := s.cache.Find(
+		ctx,
+		subject,
+		q.Text,
+		profile,
+	)
+	if err != nil {
+		return builder.QuestionContent{}, err
+	}
+
+	if cached != nil {
+		return *cached, nil
+	}
 
 	var lastErr error
 
@@ -149,6 +169,17 @@ func (s *GenerateService) generateQuestion(
 		)
 
 		if err == nil {
+
+			if cacheErr := s.cache.Save(
+				ctx,
+				subject,
+				q.Text,
+				profile,
+				content,
+			); cacheErr != nil {
+				// TODO: log cache save failure
+			}
+
 			return content, nil
 		}
 
