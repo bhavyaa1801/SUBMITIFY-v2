@@ -31,6 +31,7 @@ export async function exportDocument(document) {
             }
 
         );
+        await page.waitForTimeout(1000);
         await page.evaluate(() => {
 
             window.__SUBMITIFY_READY__ = false;

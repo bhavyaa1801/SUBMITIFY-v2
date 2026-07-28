@@ -2,46 +2,96 @@ import { useEffect, useState } from "react";
 import DocumentEditor from "../components/editor/DocumentEditor/DocumentEditor";
 
 export default function PrintDocumentPage() {
-  const [document, setDocument] = useState(window.__SUBMITIFY_DOCUMENT__ || null);
 
-  useEffect(() => {
-    const root = window.document.getElementById("root");
-    const html = window.document.documentElement;
-    const body = window.document.body;
-    html.style.background = "#fff";
-    body.style.background = "#fff";
-    if (root) root.style.background = "#fff";
-    return () => {
-      html.style.background = "";
-      body.style.background = "";
-      if (root) root.style.background = "";
-    };
-  }, []);
+    const [document, setDocument] = useState(null);
 
-  useEffect(() => {
-    const handleDocumentReady = () => setDocument(window.__SUBMITIFY_DOCUMENT__);
-    window.addEventListener("submitify-document-ready", handleDocumentReady);
+    useEffect(() => {
 
-    // signal ready as soon as document is set and React has painted —
-    // no Paged.js step to wait for anymore
-    return () => window.removeEventListener("submitify-document-ready", handleDocumentReady);
-  }, []);
+        const root = document.getElementById("root");
+        const html = window.document.documentElement;
+        const body = window.document.body;
 
-  useEffect(() => {
-    if (!document) return;
-    requestAnimationFrame(() => {
-      window.__SUBMITIFY_READY__ = true;
-    });
-  }, [document]);
+        html.style.background = "#fff";
+        body.style.background = "#fff";
 
-  if (!document) return <div>Loading document...</div>;
+        if (root) root.style.background = "#fff";
 
-  return (
-    <DocumentEditor
-      document={document}
-      setDocument={() => {}}
-      onExport={() => {}}
-      mode="print"
-    />
-  );
+        return () => {
+
+            html.style.background = "";
+            body.style.background = "";
+
+            if (root) root.style.background = "";
+
+        };
+
+    }, []);
+
+    useEffect(() => {
+
+        console.log("Print page mounted");
+
+        // ⭐ IMPORTANT
+        if (window.__SUBMITIFY_DOCUMENT__) {
+
+            console.log("Document already available");
+
+            setDocument(window.__SUBMITIFY_DOCUMENT__);
+
+        }
+
+        const handle = () => {
+
+            console.log("Received document event");
+
+            setDocument(window.__SUBMITIFY_DOCUMENT__);
+
+        };
+
+        window.addEventListener(
+            "submitify-document-ready",
+            handle
+        );
+
+        return () =>
+            window.removeEventListener(
+                "submitify-document-ready",
+                handle
+            );
+
+    }, []);
+
+    useEffect(() => {
+
+        console.log("Document changed", document);
+
+        if (!document) return;
+
+        requestAnimationFrame(() => {
+
+            console.log("READY");
+
+            window.__SUBMITIFY_READY__ = true;
+
+        });
+
+    }, [document]);
+
+    if (!document) {
+
+        return <div>Loading...</div>;
+
+    }
+
+    return (
+
+        <DocumentEditor
+            document={document}
+            setDocument={() => {}}
+            onExport={() => {}}
+            mode="print"
+        />
+
+    );
+
 }
