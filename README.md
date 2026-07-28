@@ -1,4 +1,4 @@
-# Submitify 2.0 
+# Submitify 2.0
 
 Submitify is an AI-powered platform for generating and editing academic documents. It automates repetitive documentation while allowing users to review, customize, and export professional-quality documents.
 
