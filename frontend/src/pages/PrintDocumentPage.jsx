@@ -32,19 +32,28 @@ export default function PrintDocumentPage() {
 
         console.log("Waiting for injected document...");
 
-        const interval = setInterval(() => {
+        useEffect(() => {
 
             if (window.__SUBMITIFY_DOCUMENT__) {
-
-                console.log("Document received");
-
                 setDoc(window.__SUBMITIFY_DOCUMENT__);
-
-                clearInterval(interval);
-
             }
 
-        }, 50);
+            const handle = () => {
+                setDoc(window.__SUBMITIFY_DOCUMENT__);
+            };
+
+            window.addEventListener(
+                "submitify-document-ready",
+                handle
+            );
+
+            return () =>
+                window.removeEventListener(
+                    "submitify-document-ready",
+                    handle
+                );
+
+        }, []);
 
         return () => clearInterval(interval);
 
@@ -74,8 +83,8 @@ export default function PrintDocumentPage() {
 
         <DocumentEditor
             document={doc}
-            setDocument={() => {}}
-            onExport={() => {}}
+            setDocument={() => { }}
+            onExport={() => { }}
             mode="print"
         />
 

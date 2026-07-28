@@ -8,13 +8,6 @@ const FRONTEND_URL =
 export async function exportDocument(document) {
 
     const browser = await getBrowser();
-    //remove
-    const loaded = await page.evaluate(() => {
-        return window.__PRINT_PAGE_LOADED__;
-    });
-
-    console.log("Print page loaded:", loaded);
-
     const page = await browser.newPage({
 
         viewport: {
