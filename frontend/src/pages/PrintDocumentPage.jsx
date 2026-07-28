@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import DocumentEditor from "../components/editor/DocumentEditor/DocumentEditor";
 
+
 export default function PrintDocumentPage() {
 
-    const [document, setDocument] = useState(null);
+    const [doc, setDoc] = useState(null);
 
     useEffect(() => {
 
-        const root = document.getElementById("root");
+        const root = window.document.getElementById("root");
         const html = window.document.documentElement;
         const body = window.document.body;
 
@@ -17,55 +18,38 @@ export default function PrintDocumentPage() {
         if (root) root.style.background = "#fff";
 
         return () => {
-
             html.style.background = "";
             body.style.background = "";
-
             if (root) root.style.background = "";
-
         };
 
     }, []);
 
     useEffect(() => {
 
-        console.log("Print page mounted");
+        console.log("Waiting for injected document...");
 
-        // ⭐ IMPORTANT
-        if (window.__SUBMITIFY_DOCUMENT__) {
+        const interval = setInterval(() => {
 
-            console.log("Document already available");
+            if (window.__SUBMITIFY_DOCUMENT__) {
 
-            setDocument(window.__SUBMITIFY_DOCUMENT__);
+                console.log("Document received");
 
-        }
+                setDoc(window.__SUBMITIFY_DOCUMENT__);
 
-        const handle = () => {
+                clearInterval(interval);
 
-            console.log("Received document event");
+            }
 
-            setDocument(window.__SUBMITIFY_DOCUMENT__);
+        }, 50);
 
-        };
-
-        window.addEventListener(
-            "submitify-document-ready",
-            handle
-        );
-
-        return () =>
-            window.removeEventListener(
-                "submitify-document-ready",
-                handle
-            );
+        return () => clearInterval(interval);
 
     }, []);
 
     useEffect(() => {
 
-        console.log("Document changed", document);
-
-        if (!document) return;
+        if (!doc) return;
 
         requestAnimationFrame(() => {
 
@@ -75,9 +59,9 @@ export default function PrintDocumentPage() {
 
         });
 
-    }, [document]);
+    }, [doc]);
 
-    if (!document) {
+    if (!doc) {
 
         return <div>Loading...</div>;
 
@@ -86,7 +70,7 @@ export default function PrintDocumentPage() {
     return (
 
         <DocumentEditor
-            document={document}
+            document={doc}
             setDocument={() => {}}
             onExport={() => {}}
             mode="print"
