@@ -3,6 +3,9 @@ import DocumentEditor from "../components/editor/DocumentEditor/DocumentEditor";
 
 
 export default function PrintDocumentPage() {
+    //remove
+    console.log("PRINT PAGE LOADED");
+    window.__PRINT_PAGE_LOADED__ = true;
 
     const [doc, setDoc] = useState(null);
 
