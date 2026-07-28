@@ -7,7 +7,7 @@ import { DocumentProvider } from "../context/DocumentContext";
 import { EditorModeProvider } from "../context/EditorModeContext";
 
 import EditorToolbar from "../toolbar/EditorToolbar";
-import DocumentRenderer from "../layout/DocumentRenderer";
+import DocumentRenderer from "../layout/documentrenderer";
 
 import ExportProgress from "../../ExportProgress/ExportProgress";
 
