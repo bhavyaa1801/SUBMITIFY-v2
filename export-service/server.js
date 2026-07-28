@@ -13,7 +13,7 @@ app.use(express.json({
 
 app.get("/", (req, res) => {
 
-    res.send("🚀 Submitify Export Service");
+    res.send(" Submitify Export Service");
 
 });
 
@@ -48,7 +48,7 @@ app.post("/export", async (req, res) => {
 
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 async function start() {
 
@@ -57,9 +57,13 @@ async function start() {
     app.listen(PORT, () => {
 
         console.log(
-            `🚀 Export Service running on http://localhost:${PORT}`
+            ` Export Service running on ${PORT}`
         );
 
+    });
+
+    app.get("/health", (req, res) => {
+        res.status(200).send("OK");
     });
 
 }
