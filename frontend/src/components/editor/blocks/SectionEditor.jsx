@@ -5,33 +5,24 @@ import { useDocument } from "../context/DocumentContext";
 import { useEditorMode } from "../context/EditorModeContext";
 
 export default function SectionEditor({
-
     experimentIndex,
     sectionIndex,
-
     children,
-
 }) {
 
     const {
-
         deleteSection,
         duplicateSection,
         moveSectionUp,
         moveSectionDown,
-
         activeSection,
         setActiveSection,
-
     } = useDocument();
 
     const { isPrint } = useEditorMode();
-    if (isPrint) {
-      return children;
-    }
 
+    // ✅ Hooks must always be called
     const [open, setOpen] = useState(false);
-
     const menuRef = useRef(null);
 
     const isActive =
@@ -69,13 +60,16 @@ export default function SectionEditor({
 
     }, [isPrint]);
 
+    // ✅ Return AFTER all hooks
+    if (isPrint) {
+        return children;
+    }
+
     return (
 
         <div
-            className={`section-editor ${!isPrint && isActive ? "active-section" : ""}`}
+            className={`section-editor ${isActive ? "active-section" : ""}`}
             onClick={() => {
-
-                if (isPrint) return;
 
                 setActiveSection({
                     experimentIndex,
@@ -85,100 +79,91 @@ export default function SectionEditor({
             }}
         >
 
-            {!isPrint && (
+            <div ref={menuRef}>
 
-                <div ref={menuRef}>
+                <button
+                    className="section-menu-button"
+                    onClick={(e) => {
 
-                    <button
-                        className="section-menu-button"
-                        onClick={(e) => {
+                        e.stopPropagation();
+                        setOpen(prev => !prev);
 
-                            e.stopPropagation();
+                    }}
+                >
+                    ⋮⋮
+                </button>
 
-                            setOpen(prev => !prev);
+                {open && (
 
-                        }}
-                    >
-                        ⋮⋮
-                    </button>
+                    <div className="section-menu">
 
-                    {
+                        <button
+                            onClick={() => {
 
-                        open && (
+                                duplicateSection(
+                                    experimentIndex,
+                                    sectionIndex
+                                );
 
-                            <div className="section-menu">
+                                setOpen(false);
 
-                                <button
-                                    onClick={() => {
+                            }}
+                        >
+                            Duplicate
+                        </button>
 
-                                        duplicateSection(
-                                            experimentIndex,
-                                            sectionIndex
-                                        );
+                        <button
+                            onClick={() => {
 
-                                        setOpen(false);
+                                deleteSection(
+                                    experimentIndex,
+                                    sectionIndex
+                                );
 
-                                    }}
-                                >
-                                    Duplicate
-                                </button>
+                                setOpen(false);
 
-                                <button
-                                    onClick={() => {
+                            }}
+                        >
+                            Delete
+                        </button>
 
-                                        deleteSection(
-                                            experimentIndex,
-                                            sectionIndex
-                                        );
+                        <hr />
 
-                                        setOpen(false);
+                        <button
+                            onClick={() => {
 
-                                    }}
-                                >
-                                    Delete
-                                </button>
+                                moveSectionUp(
+                                    experimentIndex,
+                                    sectionIndex
+                                );
 
-                                <hr />
+                                setOpen(false);
 
-                                <button
-                                    onClick={() => {
+                            }}
+                        >
+                            Move Up
+                        </button>
 
-                                        moveSectionUp(
-                                            experimentIndex,
-                                            sectionIndex
-                                        );
+                        <button
+                            onClick={() => {
 
-                                        setOpen(false);
+                                moveSectionDown(
+                                    experimentIndex,
+                                    sectionIndex
+                                );
 
-                                    }}
-                                >
-                                    Move Up
-                                </button>
+                                setOpen(false);
 
-                                <button
-                                    onClick={() => {
+                            }}
+                        >
+                            Move Down
+                        </button>
 
-                                        moveSectionDown(
-                                            experimentIndex,
-                                            sectionIndex
-                                        );
+                    </div>
 
-                                        setOpen(false);
+                )}
 
-                                    }}
-                                >
-                                    Move Down
-                                </button>
-
-                            </div>
-
-                        )
-
-                    }
-
-                </div>
-
-            )}
+            </div>
 
             {children}
 

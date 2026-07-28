@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import DocumentEditor from "../components/editor/DocumentEditor/DocumentEditor";
 
-
 export default function PrintDocumentPage() {
-    //remove
+
     console.log("PRINT PAGE LOADED");
     window.__PRINT_PAGE_LOADED__ = true;
 
     const [doc, setDoc] = useState(null);
 
+    // White background
     useEffect(() => {
 
-        const root = window.document.getElementById("root");
-        const html = window.document.documentElement;
-        const body = window.document.body;
+        const root = document.getElementById("root");
+        const html = document.documentElement;
+        const body = document.body;
 
         html.style.background = "#fff";
         body.style.background = "#fff";
@@ -21,44 +21,55 @@ export default function PrintDocumentPage() {
         if (root) root.style.background = "#fff";
 
         return () => {
+
             html.style.background = "";
             body.style.background = "";
+
             if (root) root.style.background = "";
+
         };
 
     }, []);
 
+    // Wait for injected document
     useEffect(() => {
 
         console.log("Waiting for injected document...");
 
-        useEffect(() => {
+        // Already injected?
+        if (window.__SUBMITIFY_DOCUMENT__) {
 
-            if (window.__SUBMITIFY_DOCUMENT__) {
-                setDoc(window.__SUBMITIFY_DOCUMENT__);
-            }
+            console.log("Document already present");
 
-            const handle = () => {
-                setDoc(window.__SUBMITIFY_DOCUMENT__);
-            };
+            setDoc(window.__SUBMITIFY_DOCUMENT__);
 
-            window.addEventListener(
+        }
+
+        const handle = () => {
+
+            console.log("Received injected document");
+
+            setDoc(window.__SUBMITIFY_DOCUMENT__);
+
+        };
+
+        window.addEventListener(
+            "submitify-document-ready",
+            handle
+        );
+
+        return () => {
+
+            window.removeEventListener(
                 "submitify-document-ready",
                 handle
             );
 
-            return () =>
-                window.removeEventListener(
-                    "submitify-document-ready",
-                    handle
-                );
-
-        }, []);
-
-        return () => clearInterval(interval);
+        };
 
     }, []);
 
+    // Notify Puppeteer
     useEffect(() => {
 
         if (!doc) return;
@@ -83,8 +94,8 @@ export default function PrintDocumentPage() {
 
         <DocumentEditor
             document={doc}
-            setDocument={() => { }}
-            onExport={() => { }}
+            setDocument={() => {}}
+            onExport={() => {}}
             mode="print"
         />
 
