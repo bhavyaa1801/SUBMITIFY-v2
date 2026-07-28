@@ -54,7 +54,9 @@ func main() {
 		cacheService,
 	)
 
-	exportService := service.NewExportService()
+	exportService := service.NewExportService(
+		cfg.ExportServiceURL,
+	)
 
 	handler := handlers.New(
 		parseService,
@@ -85,16 +87,14 @@ func main() {
 	)
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-    w.WriteHeader(http.StatusOK)
-    w.Write([]byte("OK"))
-})
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
 
 	// Demo Routes
 	mux.HandleFunc("/demo", handlers.DemoDocument)
 	// mux.HandleFunc("/demo/html", handlers.DemoHTML)
 	// mux.HandleFunc("/demo/pdf", handlers.DemoPDF)
-
-	fmt.Println("Submitify V2 running on :8080")
 
 	port := cfg.Port
 	if port == "" {

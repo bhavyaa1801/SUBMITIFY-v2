@@ -10,12 +10,14 @@ import (
 	"github.com/bhavyaa1801/submitify-v2/internal/models"
 )
 
-const ExportServiceURL = "http://localhost:3001/export"
+type ExportService struct {
+	exportURL string
+}
 
-type ExportService struct{}
-
-func NewExportService() *ExportService {
-	return &ExportService{}
+func NewExportService(exportURL string) *ExportService {
+	return &ExportService{
+		exportURL: exportURL,
+	}
 }
 
 func (s *ExportService) ExportPDF(document models.Document) ([]byte, error) {
@@ -26,7 +28,7 @@ func (s *ExportService) ExportPDF(document models.Document) ([]byte, error) {
 	}
 
 	resp, err := http.Post(
-		ExportServiceURL,
+		s.exportURL,
 		"application/json",
 		bytes.NewBuffer(payload),
 	)
