@@ -32,7 +32,7 @@ Submitify is an AI-powered platform for generating and editing academic document
 
 ### Architecture
 
-![Architecture](images/image.png)
+![Architecture](images/submitify-v2-arch.png)
 
 ------------------------------------------------------------------------
 

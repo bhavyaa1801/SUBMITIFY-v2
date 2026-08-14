@@ -67,7 +67,7 @@ Only reusable question generations are cached.
 ---
 
 # High-Level Architecture
-
+![Architecture](images/submitify-v2-arch.png)
 ![architechure](images/image.png)
 
 ---
