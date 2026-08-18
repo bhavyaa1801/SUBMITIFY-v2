@@ -48,6 +48,10 @@ app.post("/export", async (req, res) => {
 
 });
 
+app.get("/health", (req, res) => {
+        res.status(200).send("OK");
+    });
+
 const PORT = process.env.PORT || 3001;
 
 async function start() {
@@ -60,10 +64,6 @@ async function start() {
             ` Export Service running on ${PORT}`
         );
 
-    });
-
-    app.get("/health", (req, res) => {
-        res.status(200).send("OK");
     });
 
 }
